@@ -63,6 +63,7 @@ code, pre {
   font-size:12px;
 }
 
+li > code ,
 p > code ,
 pre {
   background: #f8f8f8;  
