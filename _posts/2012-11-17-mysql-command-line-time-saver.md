@@ -3,7 +3,7 @@ layout: default
 title : Saving time on the MySQL command line
 tags: [mysql]
 ---
-# MySQL command line
+# Saving time on the MySQL command line
 
 Anytime I am working with MySQL it always saves time if I add a few aliases to my **.bashrc** file.
 
