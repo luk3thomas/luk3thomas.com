@@ -11,9 +11,9 @@ Anytime I am working with MySQL it always saves time if I add a few aliases to m
 $ vi ~/.bashrc
 {% endhighlight %}
 
-{% highlight bash %}
 # Add these to the file
 
+{% highlight bash %}
 alias m='mysql -uroot -psomePass'
 alias md='mysqldump -uroot -psomePass'
 alias ms='mysqlshow -uroot -psomePass'
