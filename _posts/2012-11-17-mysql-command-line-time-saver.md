@@ -40,7 +40,7 @@ luk3@mac: ~ $ ms
 +-------------------------+
 {% endhighlight %}
 
-### Show all tables in a database
+### Show database information
 
 {% highlight bash %}
 luk3@mac: ~ $ ms ve_twist
@@ -62,6 +62,18 @@ Database: ve_twist
 +----------------------------+
 {% endhighlight %}
 
+{% highlight bash %}
+luk3@mac: ~ $ ms ve_twist tt7hewp_postmeta %
+Database: ve_twist  Table: tt7hewp_postmeta  Wildcard: %
++------------+---------------------+-----------------+------+-----+---------+----------------+---------------------------------+---------+
+| Field      | Type                | Collation       | Null | Key | Default | Extra          | Privileges                      | Comment |
++------------+---------------------+-----------------+------+-----+---------+----------------+---------------------------------+---------+
+| meta_id    | bigint(20) unsigned |                 | NO   | PRI |         | auto_increment | select,insert,update,references |         |
+| post_id    | bigint(20) unsigned |                 | NO   | MUL | 0       |                | select,insert,update,references |         |
+| meta_key   | varchar(255)        | utf8_general_ci | YES  | MUL |         |                | select,insert,update,references |         |
+| meta_value | longtext            | utf8_general_ci | YES  |     |         |                | select,insert,update,references |         |
++------------+---------------------+-----------------+------+-----+---------+----------------+---------------------------------+---------+
+{% endhighlight %}
 ### Dump a database and import into another database
 
 {% highlight bash %}
