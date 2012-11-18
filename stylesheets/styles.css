@@ -63,12 +63,18 @@ code, pre {
   font-size:12px;
 }
 
+p > code ,
 pre {
-  padding:8px 15px;
   background: #f8f8f8;  
   border-radius:5px;
   border:1px solid #e5e5e5;
   overflow-x: auto;
+}
+pre {
+  padding:8px 15px;
+}
+p > code {
+  padding:.1em .5em;
 }
 
 table {
@@ -96,7 +102,7 @@ img {
 }
 
 header {
-  width:270px;
+  width:18%;
   float:left;
   position:fixed;
 }
@@ -160,7 +166,7 @@ header ul a strong {
 }
 
 section {
-  width:500px;
+  width:65%;
   float:right;
   padding-bottom:50px;
 }
