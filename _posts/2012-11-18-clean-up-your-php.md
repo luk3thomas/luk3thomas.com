@@ -1,7 +1,7 @@
 ---
 layout: default
 tags: [php]
-title: Clean up your PHP code
+title: Cleaning up your PHP code with printf
 ---
 
 # Clean up your PHP
