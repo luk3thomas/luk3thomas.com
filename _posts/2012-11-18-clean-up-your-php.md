@@ -21,7 +21,7 @@ The reason I cringe when I see that is
 1. It is tough to quickly understand what is happening
 1. I know mantainence time for that style of coding is higher.
 
-How I usually deal with code like that is to move the code into a ```printf()``` or ```sprintf()``` function. I am a fan of moving all variable assignments above the html code and then pluggin the variables into the ```printf()``` function, like so.
+How I usually deal with code like that is to move the code into a ```printf()``` or ```sprintf()``` function. I am a fan of moving all variable assignments above the HTML code and then plugging the variables into the ```printf()``` function, like so.
 
 {% highlight php %}
 <ul class="slides">
