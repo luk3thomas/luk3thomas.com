@@ -1,10 +1,8 @@
 ---
-layout: default
-tags: [php]
+layout: post
+tags: [PHP]
 title: Cleaning up your PHP code with printf
 ---
-
-# Clean up your PHP
 
 I build a lot of [WordPress](http://wordpress.org/) sites, and I often work on code from other developers. I have seen a fair bit of PHP code and it always bothers me when I see code like this:
 {% highlight php %}

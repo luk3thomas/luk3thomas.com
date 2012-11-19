@@ -1,9 +1,9 @@
 ---
-layout: default
+layout: post
 title: Using git to stage files in hunks
 tags: [git]
 ---
-# Using git to stage files in hunks
+
 {% highlight bash %}
 $ git add -p
 {% endhighlight %}
