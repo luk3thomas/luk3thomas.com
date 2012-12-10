@@ -1,6 +1,6 @@
 ---
 layout: post
-tags: [mac]
+tags: [ruby]
 title: Moving from rvm to rbenv
 ---
 
