@@ -6,6 +6,13 @@ title: Postgres command line
 
 I just started using postgres for my rails development server. I am a huge fan of the MySQL command line tools.
 
+### Quick reference
+{% highlight bash %}
+pg_ctl start
+pg_ctl stop
+{% endhighlight %}
+
+
 To get started log into your database using `psql`
 
 {% highlight bash %}
