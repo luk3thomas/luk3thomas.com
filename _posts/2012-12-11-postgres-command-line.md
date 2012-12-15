@@ -25,6 +25,10 @@ Type "help" for help.
 gcom_development=# 
 {% endhighlight %}
 
+### Restore database
+{% highlight bash %}
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -d gcom_development dump.psql
+{% endhighlight %}
 
 ### Show tables
 Showing database tables and columns is much easier to remember than MySQL.
