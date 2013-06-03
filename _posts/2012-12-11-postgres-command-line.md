@@ -25,6 +25,11 @@ Type "help" for help.
 gcom_development=# 
 {% endhighlight %}
 
+### Create a database
+{% highlight bash %}
+createdb some_db -U luk3 -W -h localhost
+{% endhighlight %}
+
 ### Restore database
 {% highlight bash %}
 pg_restore --verbose --clean --no-acl --no-owner -h localhost -d gcom_development dump.psql
