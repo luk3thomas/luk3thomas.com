@@ -33,6 +33,7 @@ createdb some_db -U luk3 -W -h localhost
 ### Restore database
 {% highlight bash %}
 pg_restore --verbose --clean --no-acl --no-owner -h localhost -d gcom_development dump.psql
+pg_restore -vcO -h localhost -d gcom_development dump.psql                                   #compact
 {% endhighlight %}
 
 ### Show tables
