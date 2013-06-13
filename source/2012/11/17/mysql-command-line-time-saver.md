@@ -1,6 +1,7 @@
 ---
 layout: post
 title : Saving time on the MySQL command line
+category: Programming
 tags: [MySQL]
 ---
 

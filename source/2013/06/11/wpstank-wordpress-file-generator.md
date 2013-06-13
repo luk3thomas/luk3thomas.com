@@ -1,5 +1,6 @@
 ---
 layout: post
+category: Programming
 tags: [WordPress]
 title: wpstank WordPress file generator
 ---

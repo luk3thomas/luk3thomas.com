@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Using git to stage files in hunks
+category: Programming
 tags: [git]
 ---
 

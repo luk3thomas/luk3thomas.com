@@ -1,6 +1,7 @@
 ---
 layout: post
 tags: [PHP]
+category: Programming
 title: Cleaning up your PHP code with printf
 ---
 
