@@ -1,6 +1,7 @@
 ---
 layout: post
-tags: [postgreSQL]
+category: programming
+tag: SQL
 title: Postgres command line 
 ---
 

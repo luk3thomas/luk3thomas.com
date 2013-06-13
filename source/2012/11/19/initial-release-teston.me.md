@@ -1,7 +1,7 @@
 ---
 layout: post
-category: Programming
-tags: [projects]
+category: programming
+tag: projects
 title: iPhone and iPad responsive design tester
 link: //teston.me
 linkText: teston.me

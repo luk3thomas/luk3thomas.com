@@ -1,6 +1,7 @@
 ---
 layout: post
-tags: [mac]
+tag: mac
+category: programming
 title: Removing macports completely
 ---
 

@@ -1,6 +1,7 @@
 ---
 layout: post
-tags: [ruby]
+category: programming
+tag: ruby
 title: Moving from rvm to rbenv
 ---
 
