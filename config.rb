@@ -2,6 +2,7 @@
 # Compass
 ###
 
+require './lib/helpers.rb'
 activate :livereload
 
 # Susy grids in Compass
