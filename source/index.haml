@@ -2,10 +2,5 @@
 title: Home
 ---
 
-.categories
-  - categories.each do |category|
-    %h1= category
-    - tags( category ).each do |tag|
-      %h2= tag
-      - tagged_as( tag ).each do |post|
-        = partial 'layouts/partials/card', :locals => {:post => post}
+- recent_posts(5).each do |post|
+  = partial "layouts/partials/posts/post-index.haml", :locals => { :post => post }

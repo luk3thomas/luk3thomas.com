@@ -1,0 +1,10 @@
+%article.article-item
+  %header.date
+    %span.year= date post, '%Y'
+    %span.month-day
+      %span.month= date post, '%b'
+      %span.day= date post, '%d'
+  %p.title
+    %a{:href => "/#{post.path}"}= post.data.title
+  %p.tags
+    %span.tag.code{:class => "#{post.data.tag.downcase}"}= post.data.tag

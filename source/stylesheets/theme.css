@@ -55,6 +55,7 @@ blockquote {
   font-style:italic;
 }
 
+.code ,
 code, pre {
   font-family:Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
   color:#333;
@@ -164,7 +165,7 @@ strong {
   color:#222;
 }
 
-section {
+#main {
   width:65%;
   float:right;
   padding-bottom:50px;
