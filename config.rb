@@ -3,7 +3,7 @@
 ###
 
 require './lib/helpers.rb'
-activate :livereload
+#activate :livereload
 
 # Susy grids in Compass
 # First: gem install susy
