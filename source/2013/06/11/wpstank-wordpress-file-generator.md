@@ -12,12 +12,10 @@ and any other resource you want. wpstank is hosted on [GitHub](https://github.co
 
 Before you begin make sure `node` and `npm` are installed on your machine.
 
-```
-npm install -g wpstank
-```
+    npm install -g wpstank
 
 You should have access to the `wpstank` binary from the command line.
-Double check your `PATH` variable if `wpstank` isn't loaded.
+Double check your `PATH` variable if `wpstank` is not loaded.
 
 ## Getting Started
 

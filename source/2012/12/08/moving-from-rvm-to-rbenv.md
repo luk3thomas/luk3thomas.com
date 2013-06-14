@@ -1,7 +1,10 @@
 ---
 layout: post
 category: programming
-tag: ruby
+tag: system
+tags:
+  - ruby
+  - command line
 title: Moving from rvm to rbenv
 ---
 
