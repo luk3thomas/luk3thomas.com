@@ -1,12 +1,30 @@
 .categories {
+    h1 {
+        margin-bottom:.5em;
+        padding-bottom:.5em;
+        border-bottom:1px solid #ddd;
+    }  
 
-  .article-index {
-    width:30%;
-    display:inline-block;
-    margin:1em 1em 1em 0;
+    h2 {
+        margin-bottom:.25em;
+    }  
 
-    .title {
-      margin-bottom:0;
+    .article-index {
+        width:30%;
+        display:inline-block;
+        vertical-align:top;
+        margin:0 1em 1em 0;
+
+        .title {
+            margin-bottom:.5em;
+        }
     }
-  }
+}
+
+.article {
+
+    .date {
+        color:#999;
+        font-size:.75em;
+    }
 }
