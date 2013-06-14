@@ -31,6 +31,10 @@ def all_posts
   filter_content "layout", "post"
 end
 
+def recent_posts n = 5
+  all_posts[0..n-1]
+end
+
 def title resource
   resource.metadata[:page]["title"]
 end
