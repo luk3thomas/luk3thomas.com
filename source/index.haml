@@ -2,5 +2,11 @@
 title: Home
 ---
 
-- recent_posts(5).each do |post|
-  = partial "layouts/partials/posts/post-index.haml", :locals => { :post => post }
+%h1 Recent Articles
+
+#posts
+  - recent_posts(5).each do |post|
+    = partial "layouts/partials/posts/post-index.haml", :locals => { :post => post }
+
+%p
+  %a#view-all{:href => "#{blog_path}"} View all
