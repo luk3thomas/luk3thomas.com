@@ -8,3 +8,5 @@
     %a{:href => "/#{post.path}"}= post.data.title
   %p.tags
     %span.tag.code{:class => "#{post.data.tag.downcase}"}= post.data.tag
+    %span.tag /
+    = partial "layouts/partials/posts/tags", :locals => { :post => post }

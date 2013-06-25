@@ -7,7 +7,10 @@
     = stylesheet_link_tag "application"
   
   %body
-    %h1.page-title= data.page.title
-    %h5.date= date current_page
-    = yield 
+    .wrapper
+      = partial "layouts/partials/header"
+      #main
+        %h1.page-title= data.page.title
+        %h5.date= date current_page
+        = yield 
   = javascript_include_tag  "all"

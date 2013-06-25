@@ -7,7 +7,8 @@
     = stylesheet_link_tag "application"
   
   %body
-    = partial "layouts/partials/header"
-    #main
-      = yield 
+    .wrapper
+      = partial "layouts/partials/header"
+      #main
+        = yield 
   = javascript_include_tag  "all"

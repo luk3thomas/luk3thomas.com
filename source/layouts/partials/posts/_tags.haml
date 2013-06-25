@@ -1,0 +1,4 @@
+%p.tags
+  - post.data.tags.each do |tag|
+    %span.tag.code{:class => "#{tag.downcase}"}= tag
+
