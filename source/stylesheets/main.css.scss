@@ -1,4 +1,22 @@
-.categories {
+#all-posts {
+    .tag ,
+    .date {
+        display:inline-block;
+        vertical-align:top;
+    }
+
+    .tags {
+        font-size:.6em;
+        display:inline-block;
+        width:50%;
+
+        .tag {
+            font-size:1em;
+        }
+    }
+}
+
+.category {
     h1 {
         margin-bottom:.5em;
         padding-bottom:.5em;
