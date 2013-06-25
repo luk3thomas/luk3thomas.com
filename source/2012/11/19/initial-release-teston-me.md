@@ -2,6 +2,9 @@
 layout: post
 category: programming
 tag: projects
+tags: 
+  - testing
+  - RWD
 title: iPhone and iPad responsive design tester
 link: //teston.me
 linkText: teston.me

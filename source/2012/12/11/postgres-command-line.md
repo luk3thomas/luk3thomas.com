@@ -2,6 +2,8 @@
 layout: post
 category: programming
 tag: SQL
+tags:
+  - command line
 title: Postgres command line 
 ---
 

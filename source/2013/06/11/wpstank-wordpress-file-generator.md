@@ -2,6 +2,9 @@
 layout: post
 category: programming
 tag: projects
+tags:
+  - command line
+  - open source
 title: wpstank WordPress file generator
 ---
 

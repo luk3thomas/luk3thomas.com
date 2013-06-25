@@ -2,6 +2,8 @@
 layout: post
 category: programming
 tag: WordPress
+tags: 
+  - multisite
 title: Moving WordPress MultiSite to different domain
 ---
 
