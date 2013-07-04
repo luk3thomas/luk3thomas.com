@@ -1,8 +1,8 @@
 ---
 layout: post
 title : Saving time on the MySQL command line
-category: programming
-tag: SQL
+category: Programming
+tag: Coding
 tags: 
   - command line
 ---

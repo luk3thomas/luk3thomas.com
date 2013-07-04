@@ -1,13 +1,11 @@
 ---
 layout: post
-category: programming
-tag: SQL
+category: Programming
+tag: Coding
 tags:
-  - command line
+  - Command line
 title: Postgres command line 
 ---
-
-I just started using postgres for my rails development server. I am a huge fan of the MySQL command line tools.
 
 ### Quick reference
     pg_ctl start

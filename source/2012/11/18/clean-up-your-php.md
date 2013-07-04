@@ -1,14 +1,15 @@
 ---
 layout: post
-tag: coding
+tag: Coding
 tags: 
-  - php
-category: programming
+  - PHP
+category: Programming
 title: Cleaning up your PHP code with printf
 ---
 
 I build a lot of [WordPress](http://wordpress.org/) sites, and I often work on code from other developers. I have seen a fair bit of PHP code and it always bothers me when I see code like this:
 
+~~~php
     <ul class="slides">
       <?php while($query->have_posts()): $query->the_post(); ?>
         <li style="background:<?php if(get_field('slide_background_color')): the_field('slide_background_color'); else: echo '#000'; endif; ?>">
@@ -16,13 +17,16 @@ I build a lot of [WordPress](http://wordpress.org/) sites, and I often work on c
         </li>
       <?php endwhile; ?>
     </ul>
+~~~
 
 The reason I cringe when I see that is 
+
 1. It is tough to quickly understand what is happening
 1. I know mantainence time for that style of coding is higher.
 
 How I usually deal with code like that is to move the code into a ```printf()``` or ```sprintf()``` function. I am a fan of moving all variable assignments above the HTML code and then plugging the variables into the ```printf()``` function, like so.
 
+~~~php
     <ul class="slides">
       <?php while($query->have_posts()): $query->the_post(); 
         $color = get_field('slide_background_color') ? the_field('slide_background_color') : '#000';
@@ -42,6 +46,7 @@ How I usually deal with code like that is to move the code into a ```printf()```
       endwhile; 
       ?>
     </ul>
+~~~
 
 There are a couple reasons why I like that:
 

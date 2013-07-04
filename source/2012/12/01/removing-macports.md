@@ -1,10 +1,10 @@
 ---
 layout: post
-tag: system
+tag: Coding
 tags: 
   - OSX
-  - macports
-category: programming
+  - Macports
+category: Programming
 title: Removing macports completely
 ---
 

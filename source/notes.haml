@@ -1,11 +1,11 @@
 ---
-title: Writings
+title: Articles and Notes
 ---
 
 #all-posts
   - categories.each do |category|
     .category
-      %h1= category
+      %h1= category.capitalize
       - tags( category ).each do |tag|
         %h2= tag
         - tagged_as( tag ).each do |post|

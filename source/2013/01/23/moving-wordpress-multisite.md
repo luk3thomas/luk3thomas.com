@@ -1,9 +1,10 @@
 ---
 layout: post
-category: programming
-tag: WordPress
+category: Programming
+tag: Coding
 tags: 
-  - multisite
+  - WordPress 
+  - Multisite
 title: Moving WordPress MultiSite to different domain
 ---
 
