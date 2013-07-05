@@ -68,10 +68,26 @@
   .pic {
       display:none;
   }
+
+  .article-index {
+      width:100% !important;
+      margin-bottom:0 !important;
+  }
   
   #header ul {
     display:none;
   }
+
+
+  #header {
+    display:none;
+  }
+
+    #home {
+        #header {
+            display:block;
+        }
+    }
 }
 
 @media print {

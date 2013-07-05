@@ -1,5 +1,6 @@
 ---
 title: Articles and Notes
+cssId: notes
 ---
 
 #all-posts
@@ -10,3 +11,4 @@ title: Articles and Notes
         %h2= tag
         - tagged_as( tag ).each do |post|
           = partial 'layouts/partials/card', :locals => {:post => post}
+%a{href: "/"} &#x21AB; Home

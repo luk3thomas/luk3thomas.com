@@ -8,7 +8,7 @@
     = stylesheet_link_tag "application"
     = partial "layouts/partials/ga"
   
-  %body
+  %body{id: data.page.cssId}
     .wrapper
       = partial "layouts/partials/header"
       #main
