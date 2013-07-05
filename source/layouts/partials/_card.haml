@@ -1,0 +1,4 @@
+%article.article-index.article
+  %h3.title
+    %a{:href => "/#{post.path}"}= title post
+  = partial "layouts/partials/posts/tags", :locals => { :post => post }
