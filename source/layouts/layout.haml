@@ -1,0 +1,15 @@
+!!! html
+%html
+  %head
+    %meta{:charset => "utf-8"}
+    = partial "layouts/partials/signature"
+    
+    %title= data.page.title
+    = stylesheet_link_tag "application"
+    = partial "layouts/partials/ga"
+  
+  %body{id: data.page.cssId}
+    .wrapper
+      = partial "layouts/partials/header"
+      #main
+        = yield 
