@@ -32,7 +32,7 @@ def all_posts
 end
 
 def blog_path 
-  '/notes.html'
+  '/blog/notes.html'
 end
 
 def recent_posts n = 5
@@ -44,7 +44,7 @@ def title resource
 end
 
 def date resource, format = "%b %d, %Y"
-  date = Date.strptime resource.path.split('/')[0..2].join('-'), '%Y-%m-%d'
+  date = Date.strptime resource.path.split('/')[1..3].join('-'), '%Y-%m-%d'
   date.strftime format
 end
 
