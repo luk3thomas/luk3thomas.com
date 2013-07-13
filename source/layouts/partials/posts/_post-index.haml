@@ -1,9 +1,9 @@
 %article.article-item
   %header.date
-    %span.year= date post, '%Y'
     %span.month-day
       %span.month= date post, '%b'
       %span.day= date post, '%d'
+    %span.year= date post, '%Y'
   %p.title
     %a{:href => "/#{post.path}"}= post.data.title
   %p.tags
