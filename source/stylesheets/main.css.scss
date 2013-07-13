@@ -20,6 +20,18 @@
             margin:0;
         }
     }
+
+    .sub-categories {
+
+        h2 {
+
+            &:first-child {
+                margin-top:0;
+            }
+
+            margin-top:1em;
+        }
+    }
 }
 #all-posts {
     .tag ,
