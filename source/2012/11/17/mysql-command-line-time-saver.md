@@ -4,10 +4,10 @@ title : Saving time on the MySQL command line
 category: Programming
 tag: Coding
 tags: 
-  - command line
+  - Command line
 ---
 
-Anytime I am working with MySQL it always saves time if I add a few aliases to my **.bashrc** file.
+Anytime I am working with MySQL it always saves time if I add a few aliases to my `.bashrc` file.
 
     $ vi ~/.bashrc
 
