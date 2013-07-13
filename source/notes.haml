@@ -7,8 +7,9 @@ cssId: notes
   - categories.each do |category|
     .category
       %h1= category.capitalize
-      - tags( category ).each do |tag|
-        %h2= tag
-        - tagged_as( tag ).each do |post|
-          = partial 'layouts/partials/card', :locals => {:post => post}
-%a{href: "/"} &#x21AB; Home
+      %section.sub-categories
+        - tags( category ).each do |tag|
+          %h2= tag
+          - tagged_as( tag ).each do |post|
+            = partial 'layouts/partials/card', :locals => {:post => post}
+  %a{href: "/"} &#x21AB; Home

@@ -50,14 +50,15 @@ require './lib/helpers.rb'
 #   end
 # end
 
-activate :sync do |sync|
-  sync.fog_provider = 'AWS'
-  sync.fog_directory = ENV['AWS_BUCKET']
-  sync.fog_region = 'us-east-1'
+activate :s3_sync do |sync|
+  sync.bucket = ENV['AWS_BUCKET']
+  sync.region = 'us-east-1'
   sync.aws_access_key_id = ENV['AWS_KEY']
   sync.aws_secret_access_key = ENV['AWS_SECRET']
-  sync.existing_remote_files = 'delete'
+  sync.delete = true
 end
+
+caching_policy 'text/html', max_age: 0, must_revalidate: true
 
 set :css_dir, 'stylesheets'
 

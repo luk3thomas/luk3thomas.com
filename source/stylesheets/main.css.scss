@@ -3,6 +3,36 @@
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
 }
+#notes {
+    .article {
+        display:table;
+        width:100%;
+        padding-bottom:0;
+
+        .title {
+            float:left;
+        }
+
+        .tags {
+            float:right;
+            text-align:right;
+            width:auto;
+            margin:0;
+        }
+    }
+
+    .sub-categories {
+
+        h2 {
+
+            &:first-child {
+                margin-top:0;
+            }
+
+            margin-top:1em;
+        }
+    }
+}
 #all-posts {
     .tag ,
     .date {
@@ -16,7 +46,7 @@
 
         .tag {
             font-size:1em;
-            margin:.5em .5em .5em 0;
+            margin:.25em .5em 0 0;
         }
     }
 }
@@ -51,7 +81,6 @@
         display:inline-block;
         vertical-align:top;
         padding:0 2em 1em 0;
-        margin-bottom:2em;
 
         .title {
             margin-bottom:.5em;
@@ -81,7 +110,7 @@
 .article {
 
     .title {
-        line-height:1.5;
+        line-height:1.6;
     }
 
     .date {
