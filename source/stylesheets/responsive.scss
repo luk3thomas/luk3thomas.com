@@ -55,6 +55,11 @@
     position:static;
   }
   
+    #notes {
+        .tags {
+            display:none;
+        }
+    }
   pre, code {
     word-wrap:normal;
   }
