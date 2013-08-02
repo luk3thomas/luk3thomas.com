@@ -3,6 +3,9 @@
 ###
 
 require './lib/helpers.rb'
+require './lib/gzip_sitemap.rb'
+
+activate :gzip_sitemap
 #activate :livereload
 
 # Susy grids in Compass
