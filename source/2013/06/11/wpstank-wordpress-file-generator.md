@@ -8,7 +8,9 @@ tags:
 title: wpstank WordPress file generator
 ---
 
-wpstank is a file generator for custom post types, taxonomies, shortcodes
+> The following post is **outdated** and **should not** be relied upon. Refer to [README.md](https://github.com/luk3thomas/wpstank/blob/master/README.md) for the latest information.
+
+`wpstank` generates custom post types, taxonomies, shortcodes
 and any other resource you want. wpstank is hosted on [GitHub](https://github.com/luk3thomas/wpstank).
 
 ## Installation
