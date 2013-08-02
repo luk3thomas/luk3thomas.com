@@ -3,6 +3,7 @@ source :rubygems
 gem "middleman"
 gem "haml"
 gem "sass"
+gem "builder"
 gem "shotgun"
 gem "redcarpet"
 gem "middleman-syntax"
