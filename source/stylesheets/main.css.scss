@@ -193,3 +193,38 @@
     text-align:center;
     font-size:.75em;
 }
+
+input[type="text"] ,
+input[type="email"] ,
+textarea {
+    padding:.5em .8em;
+    border:1px solid #e5e5e5;
+    min-width:225px;
+
+    &:focus {
+        outline:none;
+        box-shadow:0 0 1px blue;
+    }
+}
+
+.btn {
+    background-color:#39c;
+    border:1px solid #39d;
+    color:white;
+}
+
+#contact-me {
+
+    label {
+        display:block;
+    }
+
+    textarea {
+        width:100%;
+        height:10em;
+    }
+
+    .btn {
+    }
+}
+
