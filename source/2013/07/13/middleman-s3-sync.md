@@ -8,7 +8,7 @@ tags:
     - S3
 ---
 
-I love [Middleman](http://middlemanapp.com). I built [this](/) site with Middleman and I've used it for a number of other projects.
+I love [Middleman](http://middlemanapp.com). I built [this site](https://github.com/luk3thomas/luk3thomas.com/) with Middleman and I've used it for a number of other projects.
 When it comes to syncing your site to S3, the official [middleman sync](https://github.com/karlfreeman/middleman-sync) plugin
 falls a little short. You need to use [middleman s3_sync](https://github.com/fredjean/middleman-s3_sync).
 
