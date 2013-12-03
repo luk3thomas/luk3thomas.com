@@ -4,3 +4,4 @@
 build
 .aws-keys
 tmp
+.info
