@@ -4,7 +4,7 @@
     %meta{:charset => "utf-8"}
     = partial "layouts/partials/signature"
     
-    %title= data.page.title 
+    %title= post.title 
     = stylesheet_link_tag "application"
     = partial "layouts/partials/ga"
   
@@ -12,8 +12,6 @@
     .wrapper
       = partial "layouts/partials/header"
       #main
-        %h1.page-title= data.page.title
-        %h5.date= date current_page
         = yield 
 
         %a{href: "#{blog_path}"} &#x21AB; All Notes
