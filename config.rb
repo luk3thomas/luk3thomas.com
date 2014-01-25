@@ -15,7 +15,7 @@ set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
 
 data.posts.each do |name, post|
-  proxy "/#{name.gsub(/^([0-9]{4})-([0-9]{2})-([0-9]{2})-/, '\1/\2/\3/')}.html", "/posts/single.html", locals: { post: post }, ignore: true, layout: :post
+  proxy "/#{permalink(name)}", "/posts/single.html", locals: { post: post }, ignore: true, layout: :post
 end
 
 set :haml, { ugly: true }

@@ -4,12 +4,13 @@ cssId: notes
 ---
 
 #all-posts
-  - categories.each do |category|
+  - posts = Posts.new(data.posts)
+  - posts.categories.each do |category|
     .category
       %h1= category.capitalize
       %section.sub-categories
-        - tags( category ).each do |tag|
+        - posts.tags( category ).each do |tag|
           %h2= tag
-          - tagged_as( tag ).each do |post|
-            = partial 'layouts/partials/card', :locals => {:post => post}
+          - posts.find_by_tag(tag).each do |post|
+            = partial 'layouts/partials/card', :locals => {post: post.last, slug: post.first}
   %a{href: "/"} &#x21AB; Home
