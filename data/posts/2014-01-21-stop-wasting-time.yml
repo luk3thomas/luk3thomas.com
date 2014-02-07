@@ -1,0 +1,23 @@
+date: 2014-01-21
+layout: post
+title: Stop wasting time!
+category: Programming
+tag: Coding
+tags:
+      - /etc/hosts
+      - filesystem
+content: |
+  Facebook provides little value in my life.
+  Recently I've found myself fiddling away precious moments of my life reading pointless articles or status updates and then saying _oh that's (cool|weird), [some random person a knew way back when] just had a (had a baby|got married|went on vacation)_.
+  Yuck!
+  Today I had enough so I blocked facebook on my laptop.
+  All I did was added this code to `/etc/hosts`:
+      
+      127.0.0.1 facebook.com
+      127.0.0.1 www.facebook.com
+
+  Now when I goto facebook.com I get a `This webpage is not available` error in my browser. Yay!
+  It's not perfect. I can always go back and in an remove the lines, but It's worked so far.
+  Apparently my drive to look at things on facebook isn't that strong.
+  It's more of a reflex when I get bored.
+  Now I'll do something else, like check my twitter :).
