@@ -6,8 +6,8 @@ cssId: home
 %h1 Recent Articles
 
 #posts
-  - recent_posts(5).each do |post|
-    = partial "layouts/partials/posts/post-index.haml", :locals => { :post => post }
+  - data.posts.to_a.slice(-5, 5).reverse.each do |slug, post|
+    = partial "layouts/partials/posts/post-index.haml", locals: { post: post, slug: slug }
 
 %p
   %a#view-all{:href => "#{blog_path}"} View all &#x21AC;

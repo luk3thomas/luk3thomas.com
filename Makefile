@@ -1,5 +1,9 @@
+.PHONY: build
 start:
 	bundle exec middleman server --reload-paths="data/,lib/"
+
+build:
+	bundle exec middleman build
 
 deploy:
 	@bundle exec middleman build

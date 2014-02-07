@@ -1,12 +1,13 @@
 %article.article-item
   %header.date
     %span.month-day
-      %span.month= date post, '%b'
-      %span.day= date post, '%d'
-    %span.year= date post, '%Y'
+      %span.month= date(slug.slice(0,10), '%b')
+      %span.day= date(slug.slice(0,10), '%e')
+    %span.year= slug.slice(0,4)
   %p.title
-    %a{:href => "/#{post.path}"}= post.data.title
+    %a{:href => "/#{permalink(slug)}"}= post.title
   %p.tags
-    %span.tag.code{:class => "#{post.data.tag.downcase}"}= post.data.tag
+    %span.tag.code{:class => "#{post.tag.downcase}"}= post.tag
     %span.tag /
+  %p.tags
     = partial "layouts/partials/posts/tags", :locals => { :post => post }
