@@ -19,10 +19,10 @@ data.posts.each do |name, post|
 end
 
 set :haml, { ugly: true }
-activate :syntax
+
+page '/sitemap.xml', layout: false
 
 configure :build do
   activate :minify_css
-  activate :syntax
   activate :asset_hash
 end
