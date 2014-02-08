@@ -1,0 +1,189 @@
+    
+  <canvas id="canvas">
+    Your browser doesn't support canvas
+  </canvas>
+
+  <script>
+    (function(){
+      var canvas  = document.getElementById('canvas'),
+          c       = '',
+          w       = '',
+          h       = '',
+          mouse   = {x:0, y:0, down: false},
+          factor  = { current: .8, max: .8},
+          helper  = {
+    
+            r: function(min, max) { 
+              return min + Math.floor( Math.random() * max ); 
+            },
+    
+            radian: function(degree) {
+              return Math.PI / 180 * degree ;
+            },
+    
+            color: function() {
+    
+              return [helper.r(0, 5), helper.r(0,5), helper.r(0, 5)].join(',');
+    
+            }
+    
+          };
+    
+    
+      function init() {
+    
+        /** supports canvas ? */
+        if( canvas && canvas.getContext ) {
+    
+          c = canvas.getContext('2d');
+    
+          addEventListener('resize'    , resize    , false);
+          addEventListener('mousemove' , MouseMove , false);
+          addEventListener('mousedown' , MouseDown , false);
+          addEventListener('mouseup'   , MouseUp   , false);
+    
+          resize();
+    
+          /** Create the arcs */
+          Arc.init();
+          window.s = Arc;
+    
+          setInterval(loop, 1000 / 60);
+    
+        }
+    
+      };
+    
+      function resize() {
+        canvas.width  = w = innerWidth;
+        canvas.height = h = innerHeight;
+      };
+    
+      function MouseDown() {
+        mouse.down = true;
+      };
+    
+      function MouseUp() {
+        mouse.down = false;
+      };
+    
+      function MouseMove(e) {
+    
+        mouse.x = e.pageX;
+        mouse.y = e.pageY;
+    
+      };
+    
+      function loop() {
+    
+        c.clearRect(0, 0, canvas.width, canvas.height );
+    
+        for( i=0; i < Arc.opts.limit; i++ ) {
+    
+          var arc   = Arc.arcs[i],
+              start = Math.min( arc.point1, arc.point2 ),
+              end   = Math.max( arc.point1, arc.point2 );
+    
+          /** Interaction */
+          if(mouse.down) {
+    
+            arc.speed.current *= 1.01;
+            arc.point1 *= .99;
+            arc.point2 *= .99;
+    
+          }
+    
+          /** Add the rotation */
+          if( arc.clockwise ) {
+    
+            arc.point1 += arc.speed.current ;
+            arc.point2 += arc.speed.current ;
+    
+          } else {
+    
+            arc.point1 -= arc.speed.current ;
+            arc.point2 -= arc.speed.current ;
+    
+          }
+    
+          /** Pulse the color */
+          if( ( arc.color.current > 100 && arc.pulse > 0 ) || ( arc.color.current < 5 && arc.pulse < 0 ) ) arc.pulse *= -1 ;
+    
+          arc.color.current += arc.pulse ;
+    
+          /** keep one of the chanels static */
+          var r = arc.color.r + Math.floor( arc.color.current ),
+              g = arc.color.g + Math.floor( arc.color.current ),
+              b = 20;
+    
+          /** make the rgb values */
+    
+          c.beginPath();
+          c.lineWidth = arc.width;
+          c.strokeStyle = ['rgba(', r, ',', g , ',' , b , ',', arc.opacity.current ,')'].join('');
+          console.log( c.strokeStyle );
+          c.arc(w / 2, h / 2, arc.radius, start, end, true);
+          c.stroke();
+    
+        }
+    
+      };
+    
+      Arc = {
+    
+        opts: {
+          limit: 50
+        },
+    
+        arcs: [],
+    
+        init: function() {
+    
+          Arc.create();
+    
+        },
+    
+        create: function() {
+    
+          for( i=0; i < Arc.opts.limit; i++ ) {
+    
+            arc = {
+    
+              radius  : helper.r(0, h / 2 ),
+              width   : Math.random() * 20,
+              clockwise : !Math.round( Math.random() ),
+              point1  : Math.random() * ( Math.PI * 2 ) ,
+              point2  : Math.random() * ( Math.PI * 2 ) ,
+              color   : {
+                r       : helper.r(30, 50),
+                g       : helper.r(30, 50),
+                b       : helper.r(30, 50),
+                current : 10 ,
+              },
+              pulse   : Math.random() + .2,
+              opacity : {
+                current  : Math.random() * .5,
+                original : Math.random()
+              },
+              speed   : {
+                current  : Math.random() / 50,
+                original : Math.random() / 50
+              }
+    
+            };
+    
+            Arc.arcs.push(arc);
+    
+          }
+          
+        },
+    
+      };
+    
+    
+      init();
+    
+      
+    })()
+
+  </script>

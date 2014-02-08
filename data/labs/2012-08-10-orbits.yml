@@ -1,0 +1,11 @@
+date: 2012-08-10
+layout: labs
+title: Orbits
+file: 2012-08-10-orbits
+image: true
+category: Canvas
+tags:
+      - animation
+      - HTML5 canvas
+content: |
+  Random balls floating in a random orbit. Admire them before they get away. Press the mouse to bring them back. Release the mouse to scatter.
