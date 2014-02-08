@@ -3,9 +3,10 @@ layout: labs
 title: Congressional Voting
 file: 2014-01-30-congressional-voting
 image: true
-category: Data Visualization
+category: Data visualization
 tags:
       - d3.js
+      - svg
 content: |
   An interactive plot of all United States congressmen showing the relationships between senority, the percentage of votes missed, and the percentage of votes cast along party lines. 
   Data is provided by the New York Times.

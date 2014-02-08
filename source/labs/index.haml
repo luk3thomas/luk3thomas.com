@@ -7,8 +7,8 @@ cssId: labs
   - posts = Posts.new(data.labs)
   - posts.categories.each do |category|
     .category
-      %h1= category.capitalize
+      %h1= category
       %section.sub-categories
-        - posts.find_by_category(category).each do |post|
+        - posts.find_by_category(category).to_a.reverse.each do |post|
           = partial 'layouts/partials/lab', :locals => {post: post.last, slug: post.first}
   %a{href: "/"} &#x21AB; Home
