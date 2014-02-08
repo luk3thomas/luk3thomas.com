@@ -5,10 +5,10 @@
       = image
   .bd
     %h3.title= link_to post.title, lab_permalink(slug)
-    %h5.date= date(post.date.to_s)
+    %h5.date= date(slug)
     - if post.image
       .mobile
         = image
     :markdown
       #{post.content}
-    = partial "layouts/partials/posts/tags", :locals => { :post => post }
+    = partial "layouts/partials/posts/tags", :locals => { post: post }

@@ -1,5 +1,5 @@
 def date str, format = "%b %d, %Y"
-  date = Date.strptime(str, '%Y-%m-%d')
+  date = Date.strptime(str.to_s.slice(0,10), '%Y-%m-%d')
   date.strftime format
 end
 
