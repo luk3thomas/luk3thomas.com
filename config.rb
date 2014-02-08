@@ -10,8 +10,8 @@ activate :gzip_sitemap
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
 
-data.posts.each do |name, post|
-  proxy "/#{permalink(name)}", "/notes/single.html", locals: { post: post }, ignore: true, layout: :post
+data.posts.each do |slug, post|
+  proxy "/#{permalink(slug)}", "/notes/single.html", locals: { post: post , slug: slug}, ignore: true, layout: :post
 end
 
 data.labs.each do |slug, post|

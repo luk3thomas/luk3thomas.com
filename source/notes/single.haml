@@ -1,5 +1,5 @@
 %h1.page-title= post.title
-%h5.date= date(post.date.to_s, '%b %e, %Y')
+%h5.date= date(slug, '%b %e, %Y')
 
 :markdown
   #{post.content}
