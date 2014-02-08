@@ -1,0 +1,370 @@
+<style>
+    body {
+      font: 12px/1.5 helvetica, sans-serif;
+      text-align:center;
+    }
+    
+    h1 {
+      font-size:4em;
+    }
+
+    .label {
+        font-size:12px;
+        fill:#888;
+    }
+    #links {
+        margin:0;
+        list-style:none;
+        text-align:center;
+    }
+    #links li {
+        padding:0 .5em;
+        display:inline-block;
+        text-align:left;
+    }
+    #links label {
+        display:block;
+    }
+    .axis path {
+        fill:none;
+        stroke-width:.2px;
+        stroke:#888;
+    }
+    .member {
+        stroke-width:.2px;
+        stroke:#888;
+    }
+    .member.active {
+        stroke-width:.3em;
+        stroke:rgba(0,0,0,.5);
+    }
+    .blue-start {
+        stop-color:#3498db;
+    }
+    .blue-stop {
+        stop-color:#2980b9;
+    }
+    .green-start {
+        stop-color:#2ecc71;
+    }
+    .green-stop {
+        stop-color:#27ae60;
+    }
+    .red-start {
+        stop-color:#e74c3c;
+    }
+    .red-stop {
+        stop-color:#c0392b;
+    }
+
+    .tip {
+        padding:1em;
+        background:rgba(255,255,255,.9);
+        box-shadow:0 0 .3em silver;
+        border-radius:.5em;
+        width:200px;
+        position:absolute;
+    }
+    .tip .name {
+        font-weight:bold;
+    }
+    .tip .state {
+        display:block;
+        color:#9c9c9c;
+    }
+    .tip .seniority {
+        padding-right:1.2em;
+    }
+    .tip .percent {
+        font-size:.8em;
+        padding-left:.3em;
+    }
+    .tip table {
+        width:100%;
+    }
+    .tip td {
+        font-size:.9em;
+        text-align:left;
+    }
+    .tip td:last-child {
+        text-align:right;
+    }
+</style>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.0/d3.min.js"></script>
+
+<ul id="links">
+    <li>
+        <label for="party">Party</label>
+        <select id="party">
+            <option value="all">All</option>
+            <option value="R">Republicans</option>
+            <option value="D">Democrats</option>
+        </select>
+    </li>
+
+    <li>
+        <label for="seniority">Seniority</label>
+        <select id="seniority">
+            <option value="all">All</option>
+            <option value=".75">Top 25%</option>
+            <option value=".50">Top 50%</option>
+            <option value="-.50">Bottom 50%</option>
+            <option value="-.25">Bottom 25%</option>
+            <option value="-.15">Bottom 15%</option>
+            <option value="-.05">Bottom 5%</option>
+        </select>
+    </li>
+
+</ul>
+<div id="content"></div>
+<script>
+    
+    // version 0.0.3
+    var Eventer=function(){if(!(this instanceof Eventer))return new Eventer;this.publish=function(b,c){topics=a(b),topics.forEach(function(a){"object"==typeof cache[a]&&cache[a].forEach(function(a){a.apply(this,c||[])})})},this.subscribe=function(a,b){var c=[].concat(b);return c.forEach(function(b){cache[a]||(cache[a]=[]),cache[a].push(b)}),[a,b]},this.unsubscribe=function(a,b){cache[a]&&cache[a].forEach(function(c,d){c==b&&cache[a].splice(d,1)})},this.queue=function(){return cache},this.on=this.subscribe,this.off=this.unsubscribe,this.trigger=this.publish,cache={};var a=function(a){return"string"==typeof a?a.split(" "):a};return this};
+
+    var eventer = new Eventer;
+    var margin = 200;
+    var width = window.innerWidth - margin,
+        height = window.innerHeight - margin;
+    
+    var Graph = function() {
+    
+        var scale;
+    
+        // Setup
+        var svg = d3.select('#content')
+            .append('svg')
+            .attr('width', width + margin)
+            .attr('height', height + margin)
+                .append('g')
+                .attr('transform', 'translate(' + [margin/2, margin/2].join(',') + ')');
+
+        var defs = svg.append('defs');
+
+        var x = d3.scale.linear().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+        var r = d3.scale.linear().range([2, 18]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient('bottom')
+            .tickFormat(function(d){ return d + '%' });
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient('left')
+            .tickFormat(function(d){ return d + '%' });
+
+        svg.append('g')
+            .attr('class', 'x axis')
+            .attr('transform', 'translate(0,' + height + ')')
+            .append('text')
+                .text('% Votes Along Party Lines')
+                .attr('y', 40)
+                .attr('class', 'label')
+                .attr('text-anchor', 'center')
+
+                .attr('x', (width - margin) / 2);
+
+        svg.append('g')
+            .attr('class', 'y axis')
+            .append('text')
+                .text('% Absent')
+                .attr('transform', 'rotate(-90)')
+                .attr('class', 'label')
+                .attr('y', 20)
+                .attr('x', -53)
+
+        // Add gradients
+        var blue = defs.append('linearGradient')
+            .attr('id', 'D')
+            .attr('x1', '0%')
+            .attr('y1', '0%')
+            .attr('x2', '0%')
+            .attr('y2', '100%');
+
+        blue.append('stop')
+            .attr('class', 'blue-start')
+            .attr('offset', '0%');
+
+        blue.append('stop')
+            .attr('class', 'blue-stop')
+            .attr('offset', '100%');
+
+        var red = defs.append('linearGradient')
+            .attr('id', 'R')
+            .attr('x1', '0%')
+            .attr('y1', '0%')
+            .attr('x2', '0%')
+            .attr('y2', '100%');
+
+        red.append('stop')
+            .attr('class', 'red-start')
+            .attr('offset', '0%');
+
+        red.append('stop')
+            .attr('class', 'red-stop')
+            .attr('offset', '100%');
+
+        var green = defs.append('linearGradient')
+            .attr('id', 'I')
+            .attr('x1', '0%')
+            .attr('y1', '0%')
+            .attr('x2', '0%')
+            .attr('y2', '100%');
+
+        green.append('stop')
+            .attr('class', 'green-start')
+            .attr('offset', '0%');
+
+        green.append('stop')
+            .attr('class', 'green-stop')
+            .attr('offset', '100%');
+
+
+    // Guts
+    
+        var self = this;
+    
+        this.e = new Eventer;
+    
+        this.init = function() {
+            this.e.subscribe('load', [this.getData, this.listen]);
+            this.e.subscribe('draw', this.draw);
+            this.e.subscribe('store', [this.update_scales, this.draw]);
+
+            this.e.publish('load');
+        };
+
+        this.listen = function() {
+            d3.selectAll('#party, #seniority').on( 'change', function(){
+                var party = d3.select('#party')[0][0].value,
+                    seniority = d3.select('#seniority')[0][0].value;
+
+                self.e.publish( 'draw', [ self.data.filter(function(d){
+                    return (
+                        ( d.party == party || party == 'all' ) &&
+                        ( senority_filter(d.seniority, +seniority) || seniority == 'all' ) 
+                    );
+                }) ] )
+            });
+        };
+
+        var senority_filter = function( seniority, rule ) {
+            console.log( seniority, rule );
+            if( rule > 0 ) {
+                return self.scale.seniority( seniority ) >= rule;
+            } else {
+                return self.scale.seniority( seniority ) <= -rule;
+            }
+        };
+    
+        this.getData = function() {
+            d3.json('data/2014-01-30-congressional-voting-members.json', function(error, data){
+                data.forEach(function(d){
+                    d.seniority = +d.seniority;
+                    d.missed_votes_pct = +d.missed_votes_pct;
+                    d.votes_with_party_pct = +d.votes_with_party_pct;
+                });
+    
+                self.data = data;
+                self.scale = {
+                    seniority: d3.scale.linear().domain( d3.extent( data, function(d){ return d.seniority } ))
+                };
+                self.e.publish('store', [data]);
+            })
+        };
+    
+    
+        this.update_scales = function( data ) {
+            x.domain(d3.extent(data, function(d){ return d.votes_with_party_pct; }));
+            y.domain(d3.extent(data, function(d){ return d.missed_votes_pct; }));
+            r.domain(d3.extent(data, function(d){ return d.seniority; }));
+        };
+
+        this.draw = function( data ) {
+
+            if( !svg.selectAll('.x.axis line').size() ) {
+
+                svg.select('.x.axis')
+                    .transition()
+                    .call(xAxis);
+
+                svg.select('.y.axis')
+                    .transition()
+                    .call(yAxis);
+            }
+
+            var members = svg.selectAll('.member')
+                .data(data);
+
+            members
+                .enter()
+                .append('circle')
+                .attr('class', 'member')
+                // Initial state
+                .attr('r', 0)
+                .attr('opacity', 0)
+                .attr('cy', height)
+
+            members
+                .transition()
+                .delay(function(d, i){ return i * 5 })
+                .attr('cx', function(d){ return x(d.votes_with_party_pct) })
+                .attr('fill', function(d){ return ['url(#', d.party, ')'].join('') })
+                .attr('cy', function(d){ return y(d.missed_votes_pct) })
+                .attr('opacity', 1)
+                .attr('r', function(d){ return r(d.seniority) })
+
+            members
+                .exit()
+                .transition()
+                .attr('r', 0)
+                .attr('opacity', 0)
+                .remove();
+
+            d3.selectAll('.member')
+                .on('mouseenter', function(d){
+                    // circle
+                    d3.select(this)
+                        .attr('class', 'member active');
+
+                    // tolltip
+                    d3.select('body').append('div')
+                        .attr('class', 'tip')
+                        .attr('style', [
+                                'top:', (y(d.missed_votes_pct) - 20), 'px;',
+                                'left:', x(d.votes_with_party_pct), 'px;'
+                            ].join(''))
+                        .html([
+                            '<p class="name">', [d.first_name, d.middle_name, d.last_name].join(' '),
+                                '<span class="state">', d.state, '</span>',
+                            '</p>',
+                            '<table>',
+                                '<tr>',
+                                    '<td>Senority</td>',
+                                    '<td class="seniority">', d.seniority, '</td>',
+                                '</tr>',
+                                '<tr>',
+                                    '<td>Missed votes</td>',
+                                    '<td>', d.missed_votes_pct, '<span class="percent">%</span></td>',
+                                '</tr>',
+                                '<tr>',
+                                    '<td>Votes with Party</td>',
+                                    '<td>', d.votes_with_party_pct, '<span class="percent">%</span></td>',
+                                '</tr>',
+                            '</table>',
+                        ].join(''));
+                })
+                .on('mouseleave', function(d){
+                    d3.selectAll('.tip').remove(); 
+                    d3.selectAll('.member.active')
+                        .attr('class', 'member');
+                });
+        };
+    
+        this.init.apply( this, arguments );
+    };
+    
+    var graph = new Graph;
+</script>

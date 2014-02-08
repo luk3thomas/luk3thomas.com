@@ -32,3 +32,7 @@ class Posts
     @posts.select{|k,d| d.tag === tag}
   end
 end
+
+def render_lab filename
+  File.read("./source/labs/data/#{filename}.html")
+end

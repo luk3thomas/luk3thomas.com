@@ -1,0 +1,9 @@
+.media
+  - if post.image
+    .img
+      = image_tag "/labs/data/#{post.file}-thumbnail.jpg"
+  .bd
+    %h3.title= link_to post.title, "/labs/#{permalink(slug)}"
+    :markdown
+      #{post.content}
+    = partial "layouts/partials/posts/tags", :locals => { :post => post }

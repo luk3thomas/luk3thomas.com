@@ -3,6 +3,13 @@
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
 }
+
+.media{margin:0px;}
+.media,.bd{overflow:hidden;_overflow:visible;zoom:1;}
+.media .img{float:left;}
+.media .img img{display:block;margin-right:1em;}
+.media .imgExt{float:right;margin-left:1em;}
+
 #notes {
     .article {
         display:table;
