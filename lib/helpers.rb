@@ -7,6 +7,10 @@ def permalink str
   "#{str.gsub(/^([0-9]{4})-([0-9]{2})-([0-9]{2})-(.*)/, '\4-\1\2\3')}.html"
 end
 
+def lab_permalink str
+  "/labs/#{permalink(str)}"
+end
+
 def blog_path
   "/notes/"
 end

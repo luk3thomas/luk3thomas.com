@@ -4,6 +4,21 @@
     -webkit-box-sizing:border-box;
 }
 
+
+.mobile {
+    display:none;
+}
+
+@media only screen and (max-width:700px) {
+    .desktop {
+        display:none;
+    }
+
+    .mobile {
+        display:block;
+    }
+}
+
 .media{margin:0px;}
 .media,.bd{overflow:hidden;_overflow:visible;zoom:1;}
 .media .img{float:left;}

@@ -1,9 +1,14 @@
-.media
+- image = link_to image_tag("/labs/data/#{post.file}-thumbnail.jpg"), lab_permalink(slug)
+.media.lab
   - if post.image
-    .img
-      = image_tag "/labs/data/#{post.file}-thumbnail.jpg"
+    .img.desktop
+      = image
   .bd
-    %h3.title= link_to post.title, "/labs/#{permalink(slug)}"
+    %h3.title= link_to post.title, lab_permalink(slug)
+    %h5.date= date(post.date.to_s)
+    - if post.image
+      .mobile
+        = image
     :markdown
       #{post.content}
     = partial "layouts/partials/posts/tags", :locals => { :post => post }
