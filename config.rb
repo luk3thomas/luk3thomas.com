@@ -14,8 +14,8 @@ data.posts.each do |name, post|
   proxy "/#{permalink(name)}", "/notes/single.html", locals: { post: post }, ignore: true, layout: :post
 end
 
-data.labs.each do |name, post|
-  proxy "/labs/#{permalink(name)}", "/labs/single.html", locals: { post: post }, ignore: true, layout: :labs
+data.labs.each do |slug, post|
+  proxy "/labs/#{permalink(slug)}", "/labs/single.html", locals: { post: post, slug: slug }, ignore: true, layout: :labs
 end
 
 set :haml, { ugly: true }
