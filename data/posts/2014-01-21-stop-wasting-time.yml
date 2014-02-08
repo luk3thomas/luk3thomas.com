@@ -22,4 +22,4 @@ content: |
 
   ### Update
 
-  Blocking facebook via `ect/hosts` also blocks social plugins from facebook such as the facebook like button, which is on nearly every site on the web.
+  Blocking facebook via `/ect/hosts` also blocks social plugins from facebook such as the facebook like button, which is on nearly every site on the web.
