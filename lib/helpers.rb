@@ -8,7 +8,7 @@ def permalink str
 end
 
 def blog_path
-  "/notes.html"
+  "/notes/"
 end
 
 class Posts

@@ -11,7 +11,7 @@ set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
 
 data.posts.each do |name, post|
-  proxy "/#{permalink(name)}", "/posts/single.html", locals: { post: post }, ignore: true, layout: :post
+  proxy "/#{permalink(name)}", "/notes/single.html", locals: { post: post }, ignore: true, layout: :post
 end
 
 data.labs.each do |name, post|
