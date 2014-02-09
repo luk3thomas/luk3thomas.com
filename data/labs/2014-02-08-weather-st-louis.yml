@@ -1,0 +1,12 @@
+layout: labs
+title: St. Louis Weather
+image: true
+category: Data visualization
+tags:
+      - d3.js
+      - svg
+content: |
+  Colored tiles representing the weather in St. Louis over the past few years.
+  Blue is the coldest day, red is the hotest day, and all the other colors fall in between.
+  Hover over items to see the date and temperature.
+  Data is provided by wunderground.com.

@@ -1,0 +1,317 @@
+
+    <style>
+        body {
+          font: 13px/1.5 helvetica, sans-serif;
+          text-align:center;
+        }
+        
+        h1 {
+          font-size:4em;
+        }
+
+        label {
+            font-size:.9em;
+            padding-left:2em;
+        }
+        
+        #links {
+            margin:5em 0 1em;
+            font-size:14px;
+        }
+        
+        #links a {
+            padding:.5em .8em;
+            color:#2c3e50;
+            text-decoration:none;
+            border:1px solid transparent;
+        }
+
+        #links .active {
+            background-color:#eee;
+            border:1px solid #ddd;
+        }
+
+        #tooltip {
+            padding:.5em .8em;
+            background:rgba(255,255,255,.9);
+            box-shadow:0 0 .3em silver;
+            border-radius:.5em;
+            position:absolute;
+            transition:.1s ease-in top, .05s ease-in left, .4s ease-in opacity;
+            opacity:0;
+            z-index:-9999;
+        }
+
+        #tooltip p {
+            margin:0;
+        }
+
+        #tooltip .temp {
+            font-weight:bold;
+            font-size:1.2em;
+        }
+        #tooltip .date {
+            color:#999;
+            margin-bottom:.5em;
+        }
+
+        #tooltip.active {
+            z-index:9999;
+            opacity:1;
+        }
+        
+        .rectangle {
+            stroke:rgba(0,0,0,.2);
+            stroke-width:1px;
+        }
+        .rectangle.active {
+            stroke-width:3px;
+        }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.0/d3.min.js"></script>
+
+    <div id="links">
+        <label for="year">Year</label>
+        <select id="year" name="year">
+            <option value="2014">2014</option> 
+            <option value="2013" selected="selected">2013</option>
+            <option value="2012">2012</option>
+            <option value="2011">2011</option>
+            <option value="2010">2010</option>
+        </select>
+
+        <label for="view">View</label>
+        <select id="view" name="view">
+            <option value="grid">Grid</option> 
+            <option value="range">Bar range</option>
+        </select>
+
+    </div>
+    <div id="content"></div>
+    <div id="tooltip"></div>
+    <script>
+        // version 0.0.2
+        var blend = function(rgb1, rgb2, mix) {
+            var red = d3.rgb(rgb1),
+                blue = d3.rgb(rgb2);
+            var r = (red.r * (1 - mix)) + (blue.r * mix),
+                g = (red.g * (1 - mix)) + (blue.g * mix),
+                b = (red.b * (1 - mix)) + (blue.b * mix);
+            return d3.rgb(r,g,b).toString();
+        };
+
+        var InBetween = function( limits ) {
+            var span = limits[1] - limits[0];
+        
+            this.init = function() {
+                return function(d) {
+                    return (d - limits[0]) / span;
+                }
+            };
+        
+            return this.init.apply(this);
+        };
+ 
+
+        // version 0.0.3
+        var Eventer=function(){if(!(this instanceof Eventer))return new Eventer;this.publish=function(b,c){topics=a(b),topics.forEach(function(a){"object"==typeof cache[a]&&cache[a].forEach(function(a){a.apply(this,c||[])})})},this.subscribe=function(a,b){var c=[].concat(b);return c.forEach(function(b){cache[a]||(cache[a]=[]),cache[a].push(b)}),[a,b]},this.unsubscribe=function(a,b){cache[a]&&cache[a].forEach(function(c,d){c==b&&cache[a].splice(d,1)})},this.queue=function(){return cache},this.on=this.subscribe,this.off=this.unsubscribe,this.trigger=this.publish,cache={};var a=function(a){return"string"==typeof a?a.split(" "):a};return this};
+            
+        var eventer = new Eventer;
+        var margin = 50;
+        var width = window.innerWidth - margin,
+            height = window.innerHeight - margin;
+        
+        var square = {
+            width: width / 53,
+            height: width / 53
+        };
+
+        var blue = '#3498db',
+            red = '#e74c3c';
+        
+        var week = d3.time.format('%U');
+       
+        var Graph = function() {
+        
+            var scale;
+        
+            // Setup
+            var parseDate = d3.time.format('%Y-%m-%d').parse,
+                printDate = d3.time.format('%A %b %e, %Y');
+            var svg = d3.select('#content')
+                .append('svg')
+                    .attr('width', width)
+                    .attr('height', height)
+        
+            var rectangles = svg.append('g')
+                    .attr('class', 'rectangles')
+                    .attr('transform', 'translate(0, 100)');
+        
+            // Guts
+        
+            var self = this;
+        
+            this.e = new Eventer;
+        
+            this.init = function() {
+                this.e.subscribe( 'load', this.getData );
+                this.e.subscribe( 'load:finished', this.setScale );
+                this.e.subscribe( 'store', this.store );
+                this.e.subscribe( 'load', this.listen );
+                this.e.subscribe( 'update', this.update );
+                this.e.subscribe( 'draw', this.draw );
+        
+                this.e.publish( 'load' );
+            };
+        
+            this.setScale = function(data) {
+                scale = new InBetween( d3.extent( data, function(d){ return d['Mean TemperatureF'] }) );
+            };
+        
+            this.listen = function() {
+                d3.select('#year').on('change', function(){
+                    self.e.publish( 'update', [ +this.value, d3.select('#view').node().value ] )
+                });
+
+                d3.select('#view').on('change', function(){
+                    self.e.publish( 'update', [ d3.select('#year').node().value, this.value ] );
+                });
+            };
+        
+            this.store = function( data ) {
+                self.data = data;
+                self.e.publish( 'draw', [ _.filter(data, function(o){ return o.CST.getFullYear() == 2013 }) ] );
+            };
+        
+            this.getData = function() {
+                d3.csv('/labs/data/2014-02-08-weather-st-louis.csv', function(error, data){
+                    data.forEach(function(d){
+                        d.mean = +d['Mean TemperatureF'];
+                        d.max = +d['Max TemperatureF'];
+                        d.min = +d['Min TemperatureF'];
+                        d.CST = parseDate(d.CST);
+                        d.week = +week(new Date(d.CST.getFullYear(), d.CST.getMonth(), d.CST.getDate()))
+                    });
+        
+                    self.e.publish( 'load:finished', [ data ] );
+                    self.e.publish( 'store', [ data ] );
+                })
+            };
+        
+            this.update = function(year, view) {
+                self.e.publish( 'draw', [ _.filter(self.data, function(d){ return d.CST.getFullYear() == year }), view ] );
+            };
+
+            this.draw = function( data, view ) {
+                var rectangle = rectangles.selectAll('.rectangle')
+                    .data(data)
+
+                rectangle.enter()
+                    .append('rect')
+                        .attr('opacity', 0);
+ 
+                if( view == 'range' ) {
+           
+                    rectangle
+                        .transition()
+                        .delay(function(d, i){ return i + 20 })
+                        .attr('class', 'rectangle')
+                        .attr('width', '2px')
+                        .attr('height', function(d) { return d.max - d.min })
+                        .attr('opacity', 1 )
+                        .attr('x', function(d){ return (d.week * 7 + d.CST.getDay()) / 365 * width * .99  })
+                        .attr('y', function(d){ return 150 - d.max })
+                        .attr('fill', function(d){ return blend(blue, red, scale(d.mean)); });
+            
+                    rectangle.exit()
+                        .transition()
+                        .delay(function(d, i){ return i + 20 })
+                        .attr('opacity', 0)
+                        .remove();
+
+                    rectangle.on('mouseenter', function(d){
+                        d3.select(this)
+                            .transition()
+                            .attr('class', 'rectangle active')
+
+                        d3.select('#tooltip')
+                            .attr('class', 'active')
+                            .html([
+                                '<p class="date">', printDate(d.CST), '</p>',
+                                '<p class="temp">', d.min, ' &deg;F &mdash; ', d.max, ' &deg;F</p>'
+                            ].join(''))
+                            .attr('style', [
+                                'left:', ((d.week * 7 + d.CST.getDay()) / 365 * width * .99 - 50), 'px;',
+                                'top:', (250 - d.max), 'px;',
+                            ].join(''))
+                    });
+
+                    rectangle.on('mouseleave', function(d){
+
+                        d3.select('#tooltip')
+                            .attr('class', '')
+                            .attr('style', '');
+
+                        d3.selectAll('.rectangle.active')
+                            .attr('class', 'rectangle')
+                    });
+
+                } else {
+
+                    rectangle
+                        .transition()
+                        .delay(function(d, i){ return i + 20 })
+                        .attr('class', 'rectangle')
+                        .attr('width', square.width)
+                        .attr('height', square.height)
+                        .attr('opacity', 1 )
+                        .attr('x', function(d){ return d.week * square.width * .99 })
+                        .attr('y', function(d){ return d.CST.getDay() * square.height * .99})
+                        .attr('fill', function(d){ return blend(blue, red, scale(d.mean)); });
+            
+                    rectangle.exit()
+                        .transition()
+                        .delay(function(d, i){ return i + 20 })
+                        .attr('opacity', 0)
+                        .remove();
+
+                    rectangle.on('mouseenter', function(d){
+                        d3.select(this)
+                            .transition()
+                            .attr('class', 'rectangle active')
+                            .attr('x', function(d){ return d.week * square.width - 5})
+                            .attr('y', function(d){ return d.CST.getDay() * square.height - 5})
+
+                        d3.select('#tooltip')
+                            .attr('class', 'active')
+                            .html([
+                                '<p class="date">', printDate(d.CST), '</p>',
+                                '<p class="temp">', d.mean, ' &deg;F</p>'
+                            ].join(''))
+                            .attr('style', [
+                                'left:', (d.week * square.width - 50), 'px;',
+                                'top:', (d.CST.getDay() * square.height + 120), 'px;',
+                            ].join(''))
+                    });
+
+                    rectangle.on('mouseleave', function(d){
+
+                        d3.select('#tooltip')
+                            .attr('class', '')
+                            .attr('style', '');
+
+                        d3.selectAll('.rectangle.active')
+                            .attr('class', 'rectangle')
+                            .transition()
+                            .attr('x', function(d){ return d.week * square.width * .99 })
+                            .attr('y', function(d){ return d.CST.getDay() * square.height * .99});
+                    });
+                }
+            };
+        
+            this.init.apply( this, arguments );
+        };
+        
+        var graph = new Graph;
+    </script>
