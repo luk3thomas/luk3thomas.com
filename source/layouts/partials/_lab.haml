@@ -1,5 +1,5 @@
 - image = link_to image_tag("/labs/data/#{slug}-thumbnail.jpg"), lab_permalink(slug)
-.media.lab
+.media.lab{id: permalink(slug)}
   - if post.image
     .img.desktop
       = image
