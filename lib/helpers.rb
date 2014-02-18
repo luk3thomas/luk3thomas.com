@@ -38,5 +38,5 @@ class Posts
 end
 
 def render_lab filename
-  File.read("./source/labs/data/#{filename}.html")
+  File.read("./source/labs/data/#{filename}/index.html")
 end

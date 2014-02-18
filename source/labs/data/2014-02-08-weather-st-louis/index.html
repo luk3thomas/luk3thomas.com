@@ -185,7 +185,7 @@
             };
         
             this.getData = function() {
-                d3.csv('/labs/data/2014-02-08-weather-st-louis.csv', function(error, data){
+                d3.csv('/labs/data/2014-02-08-weather-st-louis/data.csv', function(error, data){
                     data.forEach(function(d){
                         d.mean = +d['Mean TemperatureF'];
                         d.max = +d['Max TemperatureF'];

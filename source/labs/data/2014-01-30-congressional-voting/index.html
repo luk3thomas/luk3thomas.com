@@ -260,7 +260,7 @@
         };
     
         this.getData = function() {
-            d3.json('data/2014-01-30-congressional-voting-members.json', function(error, data){
+            d3.json('data/2014-01-30-congressional-voting/data.json', function(error, data){
                 data.forEach(function(d){
                     d.seniority = +d.seniority;
                     d.missed_votes_pct = +d.missed_votes_pct;
