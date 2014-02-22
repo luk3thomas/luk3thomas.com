@@ -1,0 +1,419 @@
+
+    <style>
+        body {
+          font: 13px/1.5 helvetica, sans-serif;
+          text-align:center;
+        }
+        
+        label {
+            font-size:.9em;
+            padding-left:2em;
+        }
+
+        .circle {
+            stroke:black;
+            stroke-width:2px;
+            stroke-opacity:.1;
+        }
+        .circle.active {
+            stroke-width:8px;
+            stroke-opacity:.3;
+        }
+
+        .text {
+            font-size:.9em;
+            opacity:.5;
+        }
+        .select-container {
+            display:inline-block;
+            text-align:left;
+        }
+        .select-container label {
+            display:block;
+            padding:0 0 0 .2em;
+        }
+
+        #info ,
+        #tooltip {
+            padding:.5em .8em;
+            background:rgb(255,255,255);
+            box-shadow:0 0 .3em silver;
+            font-size:1.2em;
+            border-radius:.5em;
+            position:absolute;
+            transition:.1s ease-in top, .05s ease-in left;
+            z-index:-9999;
+        }
+
+        p {
+            margin:0;
+        }
+
+        #tooltip.active {
+            z-index:9999;
+            opacity:1;
+        }
+        .date {
+            color:#777;
+            margin-bottom:.5em;
+            text-transform:uppercase;
+            font-size:.8em;
+        }
+        .labels {
+            font-size:1.05em;
+            padding:.3em 0 0;
+        }
+        .count {
+            font-weight:bold;
+            font-size:1.1em;
+        }
+        .count i {
+            font-weight:normal;
+            font-size:.7em;
+            font-style:normal;
+        }
+        .range {
+            font-size:.75em;
+            color:#888;
+        }
+        .range .date {
+            font-size:1.1em;
+            color:#444;
+            font-style:normal;
+        }
+        #info.inactive {
+            box-shadow:none;
+        }
+        #info {
+            position:absolute;
+            top:2em;
+            left:1em;
+            min-width:200px;
+        }
+        #info h1 {
+            margin:0 0 .25em 0;
+        }
+        #info .count {
+            font-size:3em;
+        }
+        .count-container {
+            text-align:right;
+            position:relative;
+        }
+        .count-container .year {
+            position:absolute;
+            left:0;
+            top:39%;
+            font-size:.75em;
+            color:#888;
+        }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.0/d3.min.js"></script>
+
+    <p class='select-container'>
+        <label>Label</label>
+        <select id="labels">
+            <option value=''>All Labels</option>
+        </select>
+    </p>
+
+    <p class='select-container'>
+        <label>Other Criteria</label>
+        <select id="other">
+            <option value=''>Any Criteria</option>
+            <option value='important'>Marked Important by Google</option>
+            <option value='social'>Email from social sites</option>
+        </select>
+    </p>
+    <p class='select-container'>
+        <button href="#" id="years">Group by years</button>
+    </p>
+
+    <div id="content">
+    </div>
+    <div id="tooltip"></div>
+    <div id="info" class="inactive"></div>
+    <script>
+        // version 0.0.4
+        var Eventer=function(){if(!(this instanceof Eventer))return new Eventer;this.publish=function(c,d){topics=b(c),topics.forEach(function(b){"object"==typeof a[b]&&a[b].forEach(function(a){a.apply(this,d||[])})})},this.subscribe=function(b,c){var d=[].concat(c);return d.forEach(function(c){a[b]||(a[b]=[]),a[b].push(c)}),[b,c]},this.unsubscribe=function(b,c){a[b]&&a[b].forEach(function(d,e){d==c&&a[b].splice(e,1)})},this.queue=function(){return a},this.on=this.subscribe,this.off=this.unsubscribe,this.trigger=this.publish;var a={},b=function(a){return"string"==typeof a?a.split(" "):a};return this};
+
+        var eventer = new Eventer;
+        var margin = 80;
+        var width = 1200 - margin * 2 ,
+            height = 600 * 2- margin * 2;
+        
+        var Graph = function() {
+        
+        
+            // Setup
+            var parseDate = d3.time.format('%Y-%m').parse,
+                printDate = d3.time.format('%b %Y');
+            var svg = d3.select('#content')
+                .append('svg')
+                    .attr('width', width + margin)
+                    .attr('height', height + margin)
+                    .append('g')
+                        .attr('transform', 'translate(' + [margin/2,margin/2].join(',') + ')')
+        
+            // Guts
+        
+            var self = this;
+
+            this.reg = {
+                social: /\+Google|Linkedin|Twitter|Facebook|YouTube|Pintrest/,
+                comma: /(\d)(?=(\d{3})+$)/
+            };
+        
+            this.e = new Eventer;
+        
+            this.init = function() {
+                this.e.subscribe( 'load', [this.getData, this.listen] );
+                this.e.subscribe( 'load:data', [this.canvas.setup] );
+                this.e.subscribe( 'draw', [this.canvas.draw] );
+                this.e.subscribe( 'info', [this.canvas.info] );
+                this.e.subscribe( 'clear', [this.canvas.infoClear] );
+        
+                this.e.publish( 'load' );
+            };
+        
+            this.listen = function() {
+                d3.select('#labels')
+                    .on('change', function(){
+                        d3.select('#other')[0][0].value = '';
+                        self.e.publish(['draw', 'info'], [self.data, {label: true, value: this.value}])
+                    });
+
+                d3.select('#other')
+                    .on('change', function(){
+                        d3.select('#labels')[0][0].value = '';
+                        self.e.publish(['draw', 'info'], [self.data, {label: false, value: this.value}])
+                    });
+                d3.select('#years')
+                    .on('click', function(){
+                        d3.select('#other')[0][0].value = '';
+                        d3.select('#labels')[0][0].value = '';
+                        self.e.publish(['draw', 'info'], [self.data, {label: false, value: true, years: true}])
+                    });
+            };
+        
+            this.getData = function() {
+                d3.csv('/labs/data/2014-02-24-gmail-archive-for-2013/data.csv', function(error, data){
+                    
+                    data.forEach(function(d){
+                        d.date = parseDate(d.date);
+                        d.count = +d.count;
+                        d.important = !!+d.important;
+                        d.social = !!d.labels.match(self.reg.social);
+                    });
+
+                    self.data = data;
+
+                    self.e.publish('load:data', [data]);
+                });
+            };
+
+            this.canvas = {
+
+                infoClear: function(data, filter) {
+                    d3.select('#info').html('')
+                        .attr('class', 'inactive');
+                },
+
+                info: function(data, filter) {
+
+                    if(filter.years) {
+
+                        for(rows=[],i=0; i < self.years.length; i++) {
+                            var year = self.years[i];
+                            var count = data.filter(function(d){ return d.date.getFullYear().toString() == year ; })
+                                .map(function(d) { return d.count })
+                                .reduce(function(d, n) { return d + n })
+                            rows.push([year, count]);
+                        }
+
+                        d3.select('#info').html([
+                            '<h1>All Years</h1>',
+                            rows.map(function(d){ return [
+                                    '<p class="count-container">',
+                                         '<span class="year">', d[0], '</span> ',
+                                         '<span class="count">', d[1].toString().replace(new RegExp(self.reg.comma), '$1,'), '</span>',
+                                    '</p>' 
+                                ].join('')
+                            }).join('')
+                        ].join(''))
+                        .attr('class', '')
+
+                        return false;
+
+                    }
+
+                    if( filter.value === '' ) {
+                        var filtered = data,
+                            title = 'All Emails';
+                    } else if(filter.label) {
+                        var filtered = data
+                                .filter(function(d){ return d.labels == filter.value; })
+                            title = filter.value;
+                    } else {
+                        var filtered = data
+                                .filter(function(d){ return d[filter.value]; })
+                            title = capitalize(filter.value);
+                    }
+
+                    var count = filtered
+                            .map(function(d){ return d.count; })
+                            .reduce(function(d, n) { return d + n })
+                            .toString().replace(new RegExp(self.reg.comma), '$1,'),
+                        range = d3.extent(filtered, function(d){ return d.date });
+                    d3.select('#info').html([
+                        '<h1>', title, '</h1>',
+                        '<p class="range">From <i class="date">', printDate(range[0]), '</i> To <i class="date">', printDate(range[1]), '</i></p>',
+                        '<p class="count">', count, '</p>'
+                    ].join(''))
+                    .attr('class', '')
+                },
+
+                setup: function(data) {
+                    self.size = d3.max(data, function(d){ return d.count });
+
+                    self.force = d3.layout.force()
+                        .nodes(data);
+
+                    // extract the unique labels
+                    var keys = d3.set( data.map(function(d){ return d.labels }) )
+                        .values(),
+                        options = keys.map(function(d) {
+                            return '<option>' + d + '</option>';
+                        }).join('');
+
+                    // add them to the select box
+                    d3.select('#labels').html(d3.select('#labels').html() + options)
+
+                    self.colors = {
+                        social: d3.rgb('#e74c3c'),
+                        dark: d3.rgb('#3E4194'),
+                        light: d3.rgb('#d35400')
+                    };
+
+                    for(i = 0; i < keys.length; i++) {
+                        var key = keys[i];
+                        if( !!key.match(self.reg.social) ) {
+                            //self.colors[keys[i]] = c.social[ i % 2 == 0 ? 'brighter' : 'darker'](Math.random() * 2).toString();
+                            self.colors[keys[i]] = ['rgb(', Math.floor(Math.random() * 255), ',', 0, ',', Math.floor(Math.random() * 150 + 50), ')'].join('');1 } else {
+                            //self.colors[keys[i]] = c[ i % 2 == 0 ? 'dark' : 'light'][ i % 2 == 0 ? 'brighter' : 'darker'](Math.random() * 1).toString();
+                            self.colors[keys[i]] = ['rgb(', 225, ',', (150 + Math.floor(Math.random() * 50)), ',', Math.floor(Math.random() * 195), ')'].join('');
+                        }
+                    }
+
+                    self.years = d3.set( data.map(function(d){ return d.date.getFullYear() }) )
+                        .values();
+
+                    self.e.publish('draw', [ data ]);
+                },
+
+                draw: function(data, filter) {
+
+                    self.force
+                        .nodes(data)
+                        .charge(function(d){ return -d.count / 1 })
+                        .size([width, height / 2])
+                        .on('tick', function(e){
+
+                            var center = {
+                                    x: width / 2,
+                                    y: height / 3
+                                },
+                                centerx;
+
+                            self.data.forEach(function(o, i) {
+
+                                if((filter || {}).value) {
+                                    // Move sides apart
+                                    if( filter.years ) {
+                                        centerx = self.years.indexOf(o.date.getFullYear().toString()) / (self.years.length - 2.7);
+                                    } else if(filter_test.call(filter, o)) {
+                                        centerx = 1 / 3;
+                                    } else {
+                                        centerx = 1.6;
+                                    }
+                                } else {
+                                    // Move back together
+                                    centerx = 1;
+                                }
+                                o.x += (center.x * centerx - o.x) * e.alpha * 0.04;
+                                o.y += (center.y - o.y) * e.alpha * 0.04;
+                            });
+
+                            d3.selectAll('.circle')
+                                .attr("cx", function(d) { return d.x; })
+                                .attr("cy", function(d) { return d.y; });
+                        })
+                        .start();
+
+                    var circles = svg.selectAll('.circle')
+                        .data(data)
+
+                    circles.enter()
+                        .append('circle')
+                        .attr('class', 'circle')
+                        .attr('r', 0)
+                        .attr('fill', function(d){ return color(d)})
+                        .call(self.force.drag)
+
+                    circles
+                        .transition()
+                        .duration(1100)
+                        .attr('fill', function(d){
+                            if( (filter || {}).value === 'social' && d.social ) {
+                                return self.colors.social.brighter(Math.random()).toString();
+                            }
+                            return color(d)
+                        })
+                        .attr('r', function(d){ return d.count / self.size * 30 + 2})
+
+                    circles.on('mouseenter', function(d){
+                        d3.select(this)
+                            .attr('class', 'circle active')
+
+                        d3.select('#tooltip')
+                            .attr('class', 'active')
+                            .html([
+                                '<p class="date">', printDate(d.date), '</p>',
+                                '<p class="labels">', d.labels, '</p>',
+                                '<p class="count">', d.count, ' <i>email', (d.count > 1 ? 's' : '' ), '</i></p>'
+                            ].join(''))
+                            .attr('style', [
+                                'left:', (d.x), 'px;',
+                                'top:', (d.y), 'px;',
+                            ].join(''))
+                    });
+
+                    circles.on('mouseleave', function(d){
+
+                        d3.select('#tooltip')
+                            .attr('class', '')
+                            .attr('style', '');
+
+                        d3.selectAll('.circle.active')
+                            .attr('class', 'circle')
+                    });
+                }
+            };
+
+            var color = function(d) {
+                return self.colors[d.labels];
+            };
+
+            var capitalize = function(s) {
+                return s.slice(0,1).toUpperCase() + s.slice(1);
+            };
+
+            var filter_test = function(d) {
+                return this.label ? this.value == d.labels : d[this.value];
+            };
+
+            this.init.apply( this, arguments );
+        };
+        
+        var graph = new Graph;
+    </script>

@@ -1,0 +1,10 @@
+layout: labs
+title: Gmail Archive
+image: true
+category: Data visualization
+tags:
+      - d3.js
+      - svg
+content: |
+  Google allows gmail users to download full backups of their email.
+  Visualize my historical email usages and categories for emails I received from 2011 to 2014. 
