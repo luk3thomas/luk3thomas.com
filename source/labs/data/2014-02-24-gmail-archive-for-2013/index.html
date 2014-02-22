@@ -4,6 +4,10 @@
           font: 13px/1.5 helvetica, sans-serif;
           text-align:center;
         }
+
+        * {
+            -webkit-font-smoothing:anitaliased;
+        }
         
         label {
             font-size:.9em;
@@ -14,10 +18,11 @@
             stroke:black;
             stroke-width:2px;
             stroke-opacity:.1;
+            transition: all .4s ease;
         }
         .circle.active {
-            stroke-width:8px;
-            stroke-opacity:.3;
+            stroke-width:4px;
+            stroke-opacity:.2;
         }
 
         .text {
@@ -41,8 +46,8 @@
             font-size:1.2em;
             border-radius:.5em;
             position:absolute;
-            transition:.1s ease-in top, .05s ease-in left;
             z-index:-9999;
+            min-width:100px;
         }
 
         p {
@@ -71,6 +76,16 @@
             font-weight:normal;
             font-size:.7em;
             font-style:normal;
+        }
+        .count.single {
+            line-height:1.4;
+            margin-top:.2em;
+            font-size:1.6em;
+        }
+        .count.single i {
+            display:block;
+            color:#999;
+            font-size:12px;;
         }
         .range {
             font-size:.75em;
@@ -380,11 +395,11 @@
                             .html([
                                 '<p class="date">', printDate(d.date), '</p>',
                                 '<p class="labels">', d.labels, '</p>',
-                                '<p class="count">', d.count, ' <i>email', (d.count > 1 ? 's' : '' ), '</i></p>'
+                                '<p class="count single">', d.count, ' <i>email', (d.count > 1 ? 's' : '' ), '</i></p>'
                             ].join(''))
                             .attr('style', [
-                                'left:', (d.x), 'px;',
-                                'top:', (d.y), 'px;',
+                                'left:', (d.x + 50), 'px;',
+                                'top:', (d.y - 90), 'px;',
                             ].join(''))
                     });
 
