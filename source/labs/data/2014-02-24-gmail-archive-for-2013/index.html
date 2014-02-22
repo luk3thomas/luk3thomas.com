@@ -50,6 +50,10 @@
             min-width:100px;
         }
 
+        #tooltip {
+            opacity:0;
+        }
+
         p {
             margin:0;
         }
@@ -330,7 +334,7 @@
 
                     self.force
                         .nodes(data)
-                        .charge(function(d){ return -d.count / 1 })
+                        .charge(function(d){ return -d.count / 2 })
                         .size([width, height / 2])
                         .on('tick', function(e){
 
