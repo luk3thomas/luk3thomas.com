@@ -7,7 +7,7 @@ tags:
       - svg
       - anmiation
 content: |
-  > **TL/DR;** see the [viz](/labs/gmail-archive-for-2013-20140224.html) in action.
+  > **TL/DR;** see the [visualization](/labs/gmail-archive-for-2013-20140224.html) in action.
 
   Google now allows gmail users to download a complete archive of their Google Services from [Google Takeout](https://www.google.com/settings/takeout).
   I downloaded a copy of my gmail account and decided to poke around a bit.
@@ -46,4 +46,4 @@ content: |
   It seemed forever before I understand d3's force layout.
   In the end, I'm not proud of the JavaScript code, but by the conclusion of the project I needed to plow though and finish things while I still had steam.
 
-  See the [viz](/labs/gmail-archive-for-2013-20140224.html) in action.
+  See the [visualization](/labs/gmail-archive-for-2013-20140224.html) in action.
