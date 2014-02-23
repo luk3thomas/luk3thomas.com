@@ -6,5 +6,7 @@ tags:
       - d3.js
       - svg
 content: |
-  Google allows gmail users to download full backups of their email.
-  Visualize my historical email usages and categories for emails I received from 2011 to 2014. 
+  Visualize my emails from late 2011 to February 2014.
+  Each ball is an email label for 1 month in the year.
+  The larger the ball, the more emails I received during that month.
+  Data is provided by google takout, more information [here](/gmail-archive-data-visualization-d3-js-20140223.html).
