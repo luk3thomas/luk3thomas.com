@@ -6,7 +6,7 @@ tags:
       - d3.js
       - svg
 content: |
-  Visualize my emails from late 2011 to February 2014.
+  Emails are grouped by gmail labels.
   Each ball is an email label for 1 month in the year.
   The larger the ball, the more emails I received during that month.
-  Data is provided by google takout, more information [here](/gmail-archive-data-visualization-d3-js-20140223.html).
+  Data is provided by google takout. See [article](/gmail-archive-data-visualization-d3-js-20140223.html) for more information.
