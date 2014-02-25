@@ -3,9 +3,9 @@
 ###
 
 require './lib/helpers.rb'
-require './lib/gzip_sitemap.rb'
+require './lib/gzip_assets.rb'
 
-activate :gzip_sitemap
+activate :gzip_assets
 
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
