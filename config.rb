@@ -24,6 +24,7 @@ page '/sitemap.xml', layout: false
 
 configure :build do
   ignore 'labs/data/*.html'
+  ignore 'stylesheets/theme/**'
   activate :minify_css
   activate :asset_hash
 end
