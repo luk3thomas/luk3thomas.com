@@ -28,7 +28,7 @@ content: |
 
   A very useful piece of meta data is the custom `X-Gmail-Labels` header google adds to all emails.
   The value of the header are the labels applied to an email I receive.
-  I have around one hundred filter rule for incoming mail so each piece is categorized.
+  I have around one hundred filter rules for incoming mail so each piece is categorized.
   Anything in the `Inbox` category is an email not matching a filter rule.
 
       From 1457861861978585811@xxx Tue Jan 21 05:30:14 2014
