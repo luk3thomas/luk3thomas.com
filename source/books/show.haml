@@ -1,0 +1,10 @@
+%h1.book-title= book.title
+%h4.book-author= book.author
+
+- book.quotes.each do |quote|
+
+  .quote
+    %p.title= quote.title
+    .content
+      :markdown
+        #{quote.content}

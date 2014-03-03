@@ -190,3 +190,15 @@ footer {
   position:fixed;
   bottom:50px;
 }
+
+#full-width {
+
+  #header {
+    display:none;
+  }
+
+  #main {
+    width:100%;
+    float:none;
+  }
+}
