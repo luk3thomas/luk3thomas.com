@@ -5,22 +5,17 @@ title: Books I've Read
 
 %h1 Books
 
-- data.books.each do |slug, b|
-
-  %h2.name
-    %span.title= b.title
-    %span.dash &mdash; 
-    %span.author= b.author
-  .description
-    :markdown
-      #{b.description}
-  .info
-    %span.tags
-      %span.tag.category= b.category
-      %span.tag /
-    %span.tags
-      - b.tags.each do |tag|
-        %span.tag.light= tag
-    %span.quotes= "Quote#{b.quotes.size < 2 ? '' : 's'} #{b.quotes.size}"
-  %p
-    %a{href: "#{slug}.html"} Read
+%ul#books
+  - data.books.each do |slug, b|
+    
+    %li.book
+      .info
+        %span.tags
+          %span.tag.category= b.category
+          %span.tag /
+        %span.tags
+          - b.tags.each do |tag|
+            %span.tag.light= tag
+      %h2.title
+        %a{href: "/books/#{slug}.html"}= b.title
+      %h4.author= b.author

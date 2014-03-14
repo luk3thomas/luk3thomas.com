@@ -1,0 +1,36 @@
+#books {
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+
+.book {
+
+    .title {
+        margin-bottom:0;
+    }
+
+    .info {
+        float:right;
+        margin-top:.25em;
+    }
+}
+
+.quote {
+    margin-bottom:3em;
+
+    .title {
+        font-size:0.85em;
+        color:#888;
+    }
+
+    .content {
+        line-height:1.7;
+        margin-bottom:1em;
+        font-size:1.1em;
+
+        p:last-child {
+            margin-bottom:0;
+        }
+    }
+}
