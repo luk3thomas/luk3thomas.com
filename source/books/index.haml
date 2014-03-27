@@ -1,0 +1,21 @@
+---
+layout: full
+title: Books I've Read
+---
+
+%h1 Books
+
+%ul#books
+  - data.books.each do |slug, b|
+    
+    %li.book
+      .info
+        %span.tags
+          %span.tag.category= b.category
+          %span.tag /
+        %span.tags
+          - b.tags.each do |tag|
+            %span.tag.light= tag
+      %h2.title
+        %a{href: "/books/#{slug}.html"}= b.title
+      %h4.author= b.author

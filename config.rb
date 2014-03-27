@@ -15,6 +15,10 @@ data.labs.each do |slug, post|
   proxy "/labs/#{permalink(slug)}", "/labs/single.html", locals: { post: post, slug: slug }, ignore: true, layout: :labs
 end
 
+data.books.each do |slug, book|
+  proxy "/books/#{permalink(slug)}", "/books/show.html", locals: { book: book, title: book.title }, ignore: true, layout: :full
+end
+
 set :haml, { ugly: true }
 
 page '/sitemap.xml', layout: false

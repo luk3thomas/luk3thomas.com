@@ -1,0 +1,19 @@
+.book
+  %h1.title= book.title
+  %h4.author= book.author
+
+  %h2 Quotes
+  - book.quotes.each_with_index do |quote, i|
+    %p.title
+      %span &mdash; 
+      %a(href="#quote-#{i}")= "#{quote.title}"
+
+  - book.quotes.each_with_index do |quote, i|
+
+    .quote(id="quote-#{i}")
+      .content
+        :markdown
+          #{quote.content}
+      %p.title
+        %span &mdash; 
+        %a(href="#quote-#{i}")= "#{quote.title}"

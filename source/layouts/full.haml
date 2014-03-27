@@ -1,0 +1,16 @@
+!!! html
+= partial "layouts/partials/signature"
+%html
+  %head
+    %meta{charset: "utf-8"}
+    %meta(name="description" content="#{data.page.description}" )
+    %meta(name="viewport" content="initial-width:device-width, initial-scale=1.0" )
+    
+    %title= defined?(title) ? title : data.page.title
+    = stylesheet_link_tag "application"
+    = partial "layouts/partials/ga"
+  
+  %body#full-width
+    .wrapper
+      #main
+        = yield 
