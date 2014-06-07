@@ -1,0 +1,13 @@
+layout: labs
+title: Q & A
+image: true
+category: Data visualization
+tags:
+      - d3.js
+      - svg
+content: |
+  A series of questions and answers gathered around a table.
+  Hover over a face to see more information.
+  Click on the _Load More_ button to load additional nodes.
+  All items are draggable.
+  Thanks to [uifaces.com](http://uifaces.com) for the avatars and [faker](https://github.com/stympy/faker) for the names, and other fake data.
