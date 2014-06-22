@@ -11,8 +11,8 @@
   
   %body.post
     .wrapper
-      = partial "layouts/partials/header"
+      ~ partial "layouts/partials/header"
       #main
-        = yield 
+        ~ yield
 
         %a{href: "#{blog_path}"} &#x21AB; All Notes
