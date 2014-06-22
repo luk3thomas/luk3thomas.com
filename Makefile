@@ -1,6 +1,6 @@
 .PHONY: build
 start:
-	bundle exec middleman server --reload-paths="data/,lib/"
+	bundle exec middleman server --reload-paths="data/,lib/" --port 4568
 
 deploy: build sync push
 
