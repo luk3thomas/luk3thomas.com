@@ -4,6 +4,10 @@
 
 require './lib/helpers.rb'
 
+scripts = Dir.entries('./source/javascripts/canvas/')
+  .select {|f| !%w(. ..).include? f }
+  .map { |f| Canvas.new(f) }
+
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
 
@@ -17,6 +21,14 @@ end
 
 data.books.each do |slug, book|
   proxy "/books/#{permalink(slug)}", "/books/show.html", locals: { book: book, title: book.title }, ignore: true, layout: :full
+end
+
+# Dynamic canvas labs
+#
+proxy "/canvas/index.html", "/canvas/list.html", ignore: true, locals: {pages: scripts}, layout: :full
+
+scripts.each do |script|
+  proxy script.permalink, "/canvas/single.html", locals: { script: script }, ignore: true, layout: :canvas
 end
 
 page '/sitemap.xml', layout: false

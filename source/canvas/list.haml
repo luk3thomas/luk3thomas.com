@@ -1,0 +1,8 @@
+---
+title: A List of HTML5 Canvas Examples
+---
+
+%ul
+  - pages.each do |script|
+    %li
+      %a(href="#{script.permalink}")= script.friendly

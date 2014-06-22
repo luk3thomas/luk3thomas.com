@@ -40,3 +40,35 @@ end
 def render_lab filename
   File.read("./source/labs/data/#{filename}/index.html")
 end
+
+class Canvas
+  attr_accessor :filename
+
+  def initialize filename
+    @filename = filename
+  end
+
+  def name
+    @filename.gsub(/\.[^\.]+$/, '')
+  end
+
+  def friendly
+    name.gsub(/-/, ' ')
+  end
+
+  def permalink
+    "/canvas/#{name}.html"
+  end
+
+  def url
+    "http://localhost:4568/javascripts/canvas/#{name}.js"
+  end
+
+  def path
+    "./source/javascripts/canvas/#{@filename}"
+  end
+
+  def coffee?
+    /\.coffee$/ =~ @filename
+  end
+end

@@ -1,0 +1,47 @@
+!!! 5
+- if script.coffee?
+  :plain
+    <!--
+
+      The example is compiled from CoffeeScript.
+
+      I've included the CoffeeScript source code inside the
+      <script type="text/coffeescript"> tag.
+
+    -->
+%html
+  %head
+    %title= "#{script.friendly} - HTML5 Canvas Example"
+  %body
+    = ""
+    / Canvas
+    = ""
+    %canvas#canvas
+
+    = ""
+    / JavaScript Setup 
+    = ""
+    :javascript
+      var canvas = document.getElementById('canvas'),
+          c      = ctx = canvas.getContext('2d'),
+          width  = canvas.width = innerWidth,
+          height = canvas.height = innerHeight,
+          center = {
+              x: width / 2,
+              y: height / 2
+          };
+      
+    = ""
+    / Custom Animation Code
+    = ""
+    = yield
+
+
+    = ""
+    / Animation Loop
+    = ""
+    :javascript
+      (function loop(){
+          window.requestAnimationFrame(loop);
+          draw();
+      })();
