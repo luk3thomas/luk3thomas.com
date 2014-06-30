@@ -5,7 +5,7 @@
 require './lib/helpers.rb'
 
 scripts = Dir.entries('./source/javascripts/canvas/')
-  .select {|f| !%w(. ..).include? f }
+  .select {|f| !(/^\./ =~ f) }  # exclude vim swp files and . .. directories
   .map { |f| Canvas.new(f) }
 
 set :markdown_engine, :redcarpet

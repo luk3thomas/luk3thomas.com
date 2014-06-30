@@ -2,15 +2,19 @@
 @.draw = ->
   clear()
 
-  circles.forEach (d, i)->
+  balls.forEach (d, i) ->
 
-    collide(d, circle) for circle in circles when circle isnt d
+    # collision
+    collide(d, ball) for ball in balls when ball isnt d
 
-    move(d)
+    # gravity
+    if i isnt 0
+      move(d)
+      d.vx += d.dx(center) * -0.0001
+      d.vy += d.dy(center) * -0.0001
 
-    d.x += (d.x - center.x) * -0.09
-    d.y += (d.y - center.y) * -0.09
 
+    # render
     c.beginPath()
     c.strokeStyle = '#000000'
     c.lineWidth = 0.5
@@ -27,6 +31,7 @@ class Ball
     @.vx = 0
     @.vy = 0
     @.r = radius
+    @.previous = {}
 
   angle: (b)->
     Math.atan2(@.dx(b), @.dy(b))
@@ -46,16 +51,19 @@ class Ball
   force: (b)->
     @.r * b.r / @.distance(b)
 
-
-circles = [1..42].map (d) ->
-  new Ball(Math.random() * 100 + 300, Math.random() * 100 + 300, Math.random() * 10 + 5, Math.random() * 360)
+balls = [1..10].map (d,i) -> new Ball(Math.random() * 1000, Math.random() * 1000, Math.random() * 40)
+balls.unshift new Ball(center.x, center.y, 200)
 
 # animation functions
 collide = (a, b) ->
-  distance   = a.distance(b)
+  nextax = a.x + a.vx
+  nextay = a.y + a.vy
+  nextbx = b.x + b.vx
+  nextby = b.y + b.vy
+  distance   = Math.sqrt(Math.pow(nextax - nextbx, 2) + Math.pow(nextay - nextby, 2))
   touching   = distance - (a.r + b.r)
 
-  if touching < 5 and touching > 0
+  if touching <= 0
     avx      = ((a.r - b.r) * a.vx + 2 * b.r * b.vx) / (a.r + b.r)
     avy      = ((a.r - b.r) * a.vy + 2 * b.r * b.vy) / (a.r + b.r)
     bvx      = ((b.r - a.r) * b.vx + 2 * a.r * a.vx) / (b.r + a.r)
@@ -65,15 +73,34 @@ collide = (a, b) ->
     b.vx = bvx
     b.vy = bvy
 
-  if touching < 0
+# if touching < 0
     a.vx += a.dx(b) * 0.009
     a.vy += a.dy(b) * 0.009
 
 move = (a) ->
-  a.vx += a.dx(center) * -0.61
-  a.vy += a.dy(center) * -0.61
+  a.previous =
+    x: a.x
+    y: a.y
+    vx: a.vx
+    vy: a.vy
+
+  # friction
   a.x += a.vx
   a.y += a.vy
 
+gravitate = (a)->
+  a.vx = a.dx(center) * 0.01
+  a.vy = a.dy(center) * 0.01
+
 clear = ->
   c.clearRect(0, 0, width, height)
+
+onMouseMove = (e)->
+  balls[0].x = e.pageX
+  balls[0].y = e.pageY
+  balls[0].vx = 0
+  balls[0].vy = 0
+  
+
+addEventListener 'mousemove', onMouseMove, false
+  

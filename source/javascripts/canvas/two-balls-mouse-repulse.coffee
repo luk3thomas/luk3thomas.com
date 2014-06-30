@@ -2,15 +2,16 @@
 @.draw = ->
   clear()
 
-  circles.forEach (d, i)->
+  collide(balls[0], balls[1])
 
-    collide(d, circle) for circle in circles when circle isnt d
+  move(balls[0])
 
-    move(d)
+  # gravity
+  balls[0].vx += balls[0].dx(center) * -0.001
+  balls[0].vy += balls[0].dy(center) * -0.001
 
-    d.x += (d.x - center.x) * -0.09
-    d.y += (d.y - center.y) * -0.09
 
+  balls.forEach (d) ->
     c.beginPath()
     c.strokeStyle = '#000000'
     c.lineWidth = 0.5
@@ -46,16 +47,14 @@ class Ball
   force: (b)->
     @.r * b.r / @.distance(b)
 
-
-circles = [1..42].map (d) ->
-  new Ball(Math.random() * 100 + 300, Math.random() * 100 + 300, Math.random() * 10 + 5, Math.random() * 360)
+balls = [new Ball(center.x, center.y, 20), new Ball(0,0,200)]
 
 # animation functions
 collide = (a, b) ->
   distance   = a.distance(b)
   touching   = distance - (a.r + b.r)
 
-  if touching < 5 and touching > 0
+  if touching < 5 and touching > 3
     avx      = ((a.r - b.r) * a.vx + 2 * b.r * b.vx) / (a.r + b.r)
     avy      = ((a.r - b.r) * a.vy + 2 * b.r * b.vy) / (a.r + b.r)
     bvx      = ((b.r - a.r) * b.vx + 2 * a.r * a.vx) / (b.r + a.r)
@@ -65,15 +64,28 @@ collide = (a, b) ->
     b.vx = bvx
     b.vy = bvy
 
-  if touching < 0
+  if touching < 3
     a.vx += a.dx(b) * 0.009
     a.vy += a.dy(b) * 0.009
 
 move = (a) ->
-  a.vx += a.dx(center) * -0.61
-  a.vy += a.dy(center) * -0.61
+
+  # friction
+  a.vx *= 0.97
+  a.vy *= 0.97
+
   a.x += a.vx
   a.y += a.vy
 
 clear = ->
   c.clearRect(0, 0, width, height)
+
+onMouseMove = (e)->
+  balls[1].x = e.pageX
+  balls[1].y = e.pageY
+  balls[1].vx = 0
+  balls[1].vy = 0
+  
+
+addEventListener 'mousemove', onMouseMove, false
+  
