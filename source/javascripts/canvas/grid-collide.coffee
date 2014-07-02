@@ -1,10 +1,10 @@
 mouseMove = (e)->
   mouse.vx = e.pageX - mouse.x
   mouse.vy = e.pageY - mouse.y
-
+ 
   mouse.x = e.pageX
   mouse.y = e.pageY
-
+    
 @.draw = ->
   clear()
   
@@ -23,7 +23,9 @@ mouseMove = (e)->
       d.vx = (d.home.x - d.x) * 0.05
       d.vy = (d.home.y - d.y) * 0.05
 
-    gravitate(d)
+    # collision
+    collide(d, ball) for ball in balls when ball isnt d
+
     move(d)
 
     c.beginPath()
@@ -61,5 +63,30 @@ mouse =
   vy: 0
   x: 0
   y: 0
-
+ 
 addEventListener 'mousemove', mouseMove, false
+
+# animation functions
+collide = (a, b) ->
+  nextax = a.x + a.vx
+  nextay = a.y + a.vy
+  nextbx = b.x + b.vx
+  nextby = b.y + b.vy
+  distance   = Math.sqrt(Math.pow(nextax - nextbx, 2) + Math.pow(nextay - nextby, 2))
+  touching   = distance - (a.r + b.r)
+
+  if touching <= 0
+    avx      = ((a.r - b.r) * a.vx + 2 * b.r * b.vx) / (a.r + b.r)
+    avy      = ((a.r - b.r) * a.vy + 2 * b.r * b.vy) / (a.r + b.r)
+    bvx      = ((b.r - a.r) * b.vx + 2 * a.r * a.vx) / (b.r + a.r)
+    bvy      = ((b.r - a.r) * b.vy + 2 * a.r * a.vy) / (b.r + a.r)
+    a.vx = avx
+    a.vy = avy
+    b.vx = bvx
+    b.vy = bvy
+
+# if touching < 0
+    a.vx += (a.x - b.x) * 0.009
+    a.vy += (a.y - b.y) * 0.009
+
+
