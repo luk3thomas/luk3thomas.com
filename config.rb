@@ -8,6 +8,10 @@ scripts = Dir.entries('./source/javascripts/canvas/')
   .select {|f| !(/^\./ =~ f) }  # exclude vim swp files and . .. directories
   .map { |f| Canvas.new(f) }
 
+arts = Dir.entries('./source/javascripts/art/')
+  .select {|f| !(/^\./ =~ f) }  # exclude vim swp files and . .. directories
+  .map { |f| Art.new(f) }
+
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
 
@@ -26,6 +30,7 @@ end
 # Dynamic canvas labs
 #
 proxy "/canvas/index.html", "/canvas/list.html", ignore: true, locals: {pages: scripts}, layout: :full
+proxy "/art/index.html", "/art/list.html", ignore: true, locals: {pages: arts}, layout: :full
 
 scripts.each do |script|
   proxy script.permalink, "/canvas/single.html", locals: { script: script }, ignore: true, layout: :canvas

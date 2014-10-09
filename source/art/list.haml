@@ -1,0 +1,34 @@
+---
+title: A List of HTML5 Canvas Examples
+---
+
+%ul
+  - pages.each_with_index do |script, index|
+    %li
+      %p
+        %a(href="#{script.permalink}")= script.friendly
+      %canvas.code(id="art-#{index}")
+
+      %script.source-code
+        = ""
+        var canvas, width, height
+        = ""
+        = "canvas = document.getElementById('art-#{index}');"
+        width  = canvas.width  = canvas.parentElement.offsetWidth;
+        height = canvas.height = window.innerHeight;
+        = ""
+
+        (function(c, width, height){
+        #{open("#{script.url}") { |f| f.read.gsub /^/, '  ' }}
+        = "})(canvas.getContext('2d'), width, height);"
+        = ""
+
+
+      - if /\.coffee$/ =~ script.filename
+        = ""
+        / CoffeeScript source code
+        = ""
+
+        %script(type="text/coffeescript")
+          #{File.open("#{script.path}").read}
+

@@ -41,11 +41,12 @@ def render_lab filename
   File.read("./source/labs/data/#{filename}/index.html")
 end
 
-class Canvas
-  attr_accessor :filename
+class DynamicJs
+  attr_accessor :filename, :base
 
-  def initialize filename
+  def initialize filename, base
     @filename = filename
+    @base = base
   end
 
   def name
@@ -57,18 +58,30 @@ class Canvas
   end
 
   def permalink
-    "/canvas/#{name}.html"
+    "/#{@base}/#{name}.html"
   end
 
   def url
-    "http://localhost:4568/javascripts/canvas/#{name}.js"
+    "http://localhost:4568/javascripts/#{@base}/#{name}.js"
   end
 
   def path
-    "./source/javascripts/canvas/#{@filename}"
+    "./source/javascripts/#{@base}/#{@filename}"
   end
 
   def coffee?
     /\.coffee$/ =~ @filename
+  end
+end
+
+class Canvas < DynamicJs
+  def initialize filename
+    super filename, "canvas"
+  end
+end
+
+class Art < DynamicJs
+  def initialize filename
+    super filename, "art"
   end
 end
