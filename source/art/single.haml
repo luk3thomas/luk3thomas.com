@@ -1,0 +1,30 @@
+%script#shared
+  function deg(radians){ return radians * 180 / Math.PI; }
+
+%h4= script.friendly
+
+%canvas.code(id="art")
+
+%script.source-code
+  = ""
+  var canvas, width, height
+  = ""
+  = "canvas = document.getElementById('art');"
+  width  = canvas.width  = canvas.parentElement.offsetWidth;
+  height = canvas.height = window.innerHeight;
+  = ""
+
+  (function(c, width, height){
+  #{open("#{script.url}") { |f| f.read.gsub /^/, '  ' }}
+  = "})(canvas.getContext('2d'), width, height);"
+  = ""
+
+
+- if /\.coffee$/ =~ script.filename
+  = ""
+  / CoffeeScript source code
+  = ""
+
+  %pre(type="text/coffeescript")
+    = "#{File.open("#{script.path}").read}"
+

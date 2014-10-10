@@ -2,6 +2,8 @@
 title: A List of HTML5 Canvas Examples
 ---
 
+%script#shared
+  function deg(radians){ return radians * 180 / Math.PI; }
 %ul
   - pages.each_with_index do |script, index|
     %li
@@ -22,13 +24,3 @@ title: A List of HTML5 Canvas Examples
         #{open("#{script.url}") { |f| f.read.gsub /^/, '  ' }}
         = "})(canvas.getContext('2d'), width, height);"
         = ""
-
-
-      - if /\.coffee$/ =~ script.filename
-        = ""
-        / CoffeeScript source code
-        = ""
-
-        %script(type="text/coffeescript")
-          #{File.open("#{script.path}").read}
-

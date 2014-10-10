@@ -36,6 +36,10 @@ scripts.each do |script|
   proxy script.permalink, "/canvas/single.html", locals: { script: script }, ignore: true, layout: :canvas
 end
 
+arts.each do |script|
+  proxy script.permalink, "/art/single.html", locals: { script: script, title: script.friendly }, ignore: true, layout: :full
+end
+
 page '/sitemap.xml', layout: false
 
 configure :build do
