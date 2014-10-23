@@ -1,8 +1,8 @@
 c.rect(0, 0, width, height)
-c.fillStyle = "rgba(33, 10, 54, 1)"
+c.fillStyle   = "rgba(33, 10, 54, 1)"
 c.fill()
 
-c.fillStyle = "rgba(255,255,255,0.05)"
+c.fillStyle   = "rgba(255,255,255,0.05)"
 c.strokeStyle = "rgba(255,255,255,0.5)"
 
 [1..10].forEach (i, x, l) ->
@@ -12,6 +12,7 @@ c.strokeStyle = "rgba(255,255,255,0.5)"
   c.stroke()
 
 c.beginPath()
+c.strokeStyle = "rgba(255,255,255,0.2)"
 
 c.moveTo( width/2,          0)
 c.lineTo( width/2,     height)
