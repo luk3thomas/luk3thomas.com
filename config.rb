@@ -4,12 +4,16 @@
 
 require './lib/helpers.rb'
 
-scripts = Dir.entries('./source/javascripts/canvas/')
-  .select {|f| !(/^\./ =~ f) }  # exclude vim swp files and . .. directories
+def collect_files(path)
+  Dir.entries(path)
+    .select {|f| !(/^\./ =~ f) }  # exclude vim swp files and . .. directories
+    .sort {|a, b| (File.stat("#{path}#{a}").mtime <=> File.stat("#{path}#{b}").mtime) * -1}
+end
+
+scripts = collect_files('./source/javascripts/canvas/')
   .map { |f| Canvas.new(f) }
 
-arts = Dir.entries('./source/javascripts/art/')
-  .select {|f| !(/^\./ =~ f) }  # exclude vim swp files and . .. directories
+arts = collect_files('./source/javascripts/art/')
   .map { |f| Art.new(f) }
 
 set :markdown_engine, :redcarpet
