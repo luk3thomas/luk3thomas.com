@@ -19,7 +19,7 @@ title: Contact Me - St. Louis Web Developer
   ## Say Hello. You'll be glad you did :)
 
 
-%form#contact-me{action: 'https://docs.google.com/forms/d/1Ful2yDJEBcRWP6UNI8IG-g3ByEZUF__q2IQcFZuVEBk/formResponse?embedded=true', method: 'POST', target:'_blank'}
+%form#contact-me{method: 'POST', target:'_blank'}
   %p
     %label Your Name
     %input{type: 'text', name: 'entry.33620929'}
@@ -30,3 +30,6 @@ title: Contact Me - St. Louis Web Developer
     %label What do you need? How can I help?
     %textarea{name: 'entry.18982858'}
   %input.btn{type: 'submit', value: 'Get in Touch'}
+
+:javascript
+  document.getElementById('contact-me').action = "https://docs.google.com/forms/d/1Ful2yDJEBcRWP6UNI8IG-g3ByEZUF__q2IQcFZuVEBk/formResponse?embedded=true"
