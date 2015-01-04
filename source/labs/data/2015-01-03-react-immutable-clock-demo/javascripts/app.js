@@ -30,8 +30,6 @@ data = immstruct("app", {
 
 window.i = immstruct;
 
-window.d = data;
-
 routes = React.createElement(Route, {
   "handler": Main,
   "path": "/"
@@ -30076,11 +30074,9 @@ module.exports = React.createClass({
     stopwatch: React.PropTypes.object.isRequired
   },
   reset: function(e) {
-    var tick;
     e.stopPropagation();
-    tick = 0;
-    this.props.stopwatch.cursor("time").set("tick", tick);
-    this.props.stopwatch.cursor("time").set("display", time.parse(tick).display);
+    this.props.stopwatch.cursor("time").set("tick", 0);
+    this.props.stopwatch.cursor("time").set("display", time.parse(0).display);
     return this.props.stopwatch.update("laps", function(laps) {
       return laps.clear();
     });
@@ -30111,27 +30107,28 @@ module.exports = React.createClass({
     }
   },
   render: function() {
-    var average, classes, complete, cursor, hundreth, laps, minute, offset, reset, rotation, second, text, total, _ref;
+    var classes, complete, cursor, hundreth, lapper, laps, last, minute, offset, reset, rotation, second, text, total, _ref, _ref1;
     cursor = this.props.stopwatch.cursor("time");
+    laps = this.props.stopwatch.get("laps");
     text = cursor.get("running") ? "Stop" : "Start";
     _ref = time.parts(cursor.get("display")), minute = _ref[0], second = _ref[1], hundreth = _ref[2];
-    total = this.props.stopwatch.get("laps").reduce(function(m, d) {
+    total = laps.reduce(function(m, d) {
       return d.duration + m;
     }, 0);
-    average = total / this.props.stopwatch.get("laps").count() || 1;
-    complete = (cursor.get("tick") - total) / average;
+    last = ((_ref1 = laps.slice(-1).first()) != null ? _ref1.duration : void 0) || 1;
+    complete = (cursor.get("tick") - total) / last;
     offset = Math.max(1448 - 1448 * complete, 0);
     rotation = complete * 360 || 0;
     classes = cx({
       "stopwatch-container": true,
       running: cursor.get("running"),
-      "has-laps": this.props.stopwatch.get("laps").count()
+      "has-laps": laps.count()
     });
     if (cursor.get("tick") > 0) {
-      laps = React.createElement(Lapper, {
+      lapper = React.createElement(Lapper, {
         "tick": cursor.get("tick"),
         "running": cursor.get("running"),
-        "laps": this.props.stopwatch.cursor(["laps"])
+        "laps": this.props.stopwatch.cursor("laps")
       });
     }
     if (cursor.get("tick") > 0 && !cursor.get("running")) {
@@ -30191,7 +30188,7 @@ module.exports = React.createClass({
       "className": "dialog dialog-" + (text.toLowerCase())
     }, text)), React.createElement("div", {
       "className": "laps-container"
-    }, reset, laps));
+    }, reset, lapper));
   }
 });
 
