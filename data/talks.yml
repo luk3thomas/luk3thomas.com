@@ -1,0 +1,6 @@
+# id maps to talks/#{id}-#{date}
+-
+  id: elixir-pattern-matching
+  title: Pattern Matching in Elixir
+  date: 2015-08-11
+  href: /talks/pattern-matching-in-elixir.html

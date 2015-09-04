@@ -31,6 +31,10 @@ data.books.each do |slug, book|
   proxy "/books/#{permalink(slug)}", "/books/show.html", locals: { book: book, title: book.title }, ignore: true, layout: :full
 end
 
+data.talks.each do |talk|
+  proxy talk.href, "/talks/show.html", locals: { talk: talk }, ignore: true, layout: :talk
+end
+
 # Dynamic canvas labs
 #
 proxy "/canvas/index.html", "/canvas/list.html", ignore: true, locals: {pages: scripts}, layout: :full
@@ -48,6 +52,7 @@ page '/sitemap.xml', layout: false
 
 configure :build do
   ignore 'labs/data/*.html'
+  ignore 'talks/talks/*'
   ignore 'stylesheets/theme/**'
   activate :minify_css
   activate :asset_hash

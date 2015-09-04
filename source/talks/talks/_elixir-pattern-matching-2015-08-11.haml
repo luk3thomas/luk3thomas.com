@@ -1,0 +1,193 @@
+%section{"data-background" => "rebeccapurple"}
+  %h2 Pattern matching in elixir
+%section{"data-background" => "rebeccapurple"}
+  %h2 What is elixir?
+  %ul
+    %li
+      Elixir is a dynamic, functional language designed for building scalable
+      and maintainable applications.
+    %li
+      Elixir leverages the Erlang VM, known for
+      running low-latency, distributed and fault-tolerant systems, while also
+      being successfully used in web development and the embedded software
+      domain.
+%section{"data-background" => "rebeccapurple"}
+  %h2 Familiar syntax 🍒
+  %pre
+    %code
+      :preserve
+        defmodule Math do
+         def sum(a, b) do
+           a + b
+         end
+        end
+         
+        Math.sum(1, 2
+%section{"data-background" => "rebeccapurple"}
+  %h2 Not so familiar syntax 😲
+  %pre.left
+    %code
+      :preserve
+        defmodule Math do
+         def sum, do: 0
+         def sum(a), do: a
+         def sum(a, b), do: a + b
+         def sum(a, b, c), do: a + b + c
+         def sum([]), do: 0
+         def sum([head|tail]), do: head + sum(tail)
+        end
+         
+        Math.sum([1, 2, 3, 4])
+%section{"data-background" => "rebeccapurple"}
+  %h2 what the ... 😳
+  %pre
+    %code
+      :preserve
+        iex> x = 1
+        1
+        iex> 1 = x
+        1
+  %p What's going on 😕?
+%section{"data-background" => "rebeccapurple"}
+  %h2
+    The match operator
+    %code =
+  %p
+    In a pattern matching, a left-hand side pattern is matched against a
+    right-hand side term. If the matching succeeds, any unbound variables in
+    the pattern become bound. If the matching fails, a run-time error occurs.
+%section{"data-background" => "rebeccapurple"}
+  %p In the REPL
+  %pre
+    %code
+      :preserve
+        iex> a = 1
+        1
+        iex> {a, b} = {1, 2}
+        {1, 2}
+        iex> [a, b] = [1, 2]
+        [1, 2]
+        iex> {a, b, c} = {1, 2}
+        ** (MatchError) no match of right hand side value: {1, 2}
+%section{"data-background" => "rebeccapurple"}
+  %p In a function
+  %pre
+    %code
+      :preserve
+        def f({:a, :b} = tuple), do: IO.puts "All your \#{inspect tuple} are belong to us"
+        def f([]),               do: IO.puts "Empty"
+        def f(n),                do: IO.puts "Inspecting \#{inspect n}"
+         
+        f([])
+        #=> "Empty"
+         
+        f({:a, :b})
+        #=> "All your {:a, :b} are belong to us"
+         
+        f({:a, :b, :c})
+        #=> "Inspecting {:a, :b, :c}"
+%section{"data-background" => "rebeccapurple"}
+  %h2 An example 😃
+  %p Let's write an implementation of the Fibonacci sequence
+  %p
+    f
+    %sub n
+    \= f
+    %sub n-1
+    + f
+    %sub n- 2
+  %pre
+    %code 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144
+%section{"data-background" => "rebeccapurple"}
+  %h2 In JavaScript 😎
+  %pre
+    %code
+      :preserve
+        function fib(n) {
+         if (n <= 1) {
+           return n;
+         } else {
+           return fib(n-1) + fib(n-2);
+         }
+        }
+  %ol.left
+    %li.fragment Mental overhead
+    %li.fragment What if n is less than 0?
+    %li.fragment What if n is not a number?
+%section{"data-background" => "rebeccapurple"}
+  %h2 In Elixir 😎
+  %pre
+    %code
+      :preserve
+        defmodule Math do
+         def fib(0), do: 0
+         def fib(1), do: 1
+         def fib(n), do: fib(n-2) + fib(n-1)
+        end
+  %p.fragment How can we handle < 0 and arguments that are not a number?
+  %pre.fragment
+    %code
+      :preserve
+        defmodule Math do
+         def fib(n) when not is_number(n), do: raise(ArgumentError, message: "not a number")
+         def fib(n)            when n < 0, do: 0
+         def fib(0),                       do: 0
+         def fib(1),                       do: 1
+         def fib(n),                       do: fib(n-2) + fib(n-1)
+        end
+%section{"data-background" => "rebeccapurple"}
+  %h2 An advanced example
+  %p
+    From
+    %a{:href => "http://www.zohaib.me/binary-pattern-matching-in-elixir/"} binary pattern matching in elixir
+  %pre
+    %code
+      :preserve
+        defmodule Expng do
+         
+         defstruct [:width, :height, :bit_depth, :color_type, :compression, :filter, :interlace, :chunks]
+         
+         def png_parse(<<
+         0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+                        _length :: size(32),
+                        "IHDR",
+                        width :: size(32),
+                        height :: size(32),
+                        bit_depth,
+                        color_type,
+                        compression_method,
+                        filter_method,
+                        interlace_method,
+                        _crc :: size(32),
+                        chunks :: binary>>) do
+           png = %Expng{
+             width: width,
+             height: height,
+             bit_depth: bit_depth,
+             color_type: color_type,
+             compression: compression_method,
+             filter: filter_method,
+             interlace: interlace_method,
+             chunks: []}
+         
+           png_parse_chunks(chunks, png)
+         end
+         
+         defp png_parse_chunks(<<
+                               length :: size(32),
+                               chunk_type :: size(32),
+                               chunk_data :: binary - size(length),
+                               crc :: size(32),
+                               chunks :: binary>>, png) do
+           chunk = %{length: length, chunk_type: chunk_type, data: chunk_data, crc: crc}
+           png = %{png | chunks: [chunk | png.chunks]}
+         
+           png_parse_chunks(chunks, png)
+         end
+         
+         defp png_parse_chunks(<<>>, png) do
+           %{png | chunks: Enum.reverse(png.chunks)}
+         end
+        end
+%section{"data-background" => "rebeccapurple"}
+  %h2 The End 👋
