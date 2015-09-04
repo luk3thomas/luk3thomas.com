@@ -17,5 +17,5 @@ release:
 	@git checkout develop
 
 push:
-	git push origin master develop
+	git push origin master
 	git push origin --tags
