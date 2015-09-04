@@ -1,0 +1,55 @@
+---
+layout: full
+---
+
+%h1 Press a key to see the keycode
+%p
+  Time between press
+  %strong#diff
+%p
+  target
+  %span#target
+%input/
+%textarea
+%ul
+  %li
+    %h2 keypress
+    #keypress
+  %li
+    %h2 keyup
+    #keyup
+  %li
+    %h2 keydown
+    #keydown
+:javascript
+  last = +new Date();
+  'keypress keyup keydown'.split(' ').forEach(function(name, i){
+      window.addEventListener(name, function(e){
+          document.getElementById(name).innerHTML = e.which;
+          if (i === 0) {
+            now = +new Date();
+            document.getElementById('diff').innerHTML = (now - last);
+            last = now;
+
+            document.getElementById('target').innerHTML = e.target;
+          }
+      });
+  });
+:css
+  textarea ,
+  input {
+      width: 100%;
+      margin-bottom: 1em;
+      outline: 0;
+      padding: 0.5em;
+  }
+  ul {
+      padding: 10% 0;
+      font-size: 2em;
+      text-align: center;
+  }
+  ul li {
+      width: 30%;
+      float: left;
+      list-style: none;
+  }
