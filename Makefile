@@ -2,7 +2,7 @@
 start:
 	bundle exec middleman server --port 4568
 
-deploy: build sync push
+deploy: stash build sync push pop
 
 build:
 	bundle exec middleman build
@@ -19,3 +19,9 @@ release:
 push:
 	git push origin master
 	git push origin --tags
+
+stash:
+	git stash
+
+pop:
+	git stash pop
