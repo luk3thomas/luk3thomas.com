@@ -27,8 +27,8 @@ data.labs.each do |slug, post|
   proxy "/labs/#{permalink(slug)}", "/labs/single.html", locals: { post: post, slug: slug }, ignore: true, layout: :labs
 end
 
-data.books.each do |slug, book|
-  proxy "/books/#{permalink(slug)}", "/books/show.html", locals: { book: book, title: book.title }, ignore: true, layout: :full
+data.quotes.each do |slug, quote|
+  proxy "/quotes/#{permalink(slug)}", "/quotes/show.html", locals: { quote: quote, title: quote.title }, ignore: true, layout: :full
 end
 
 data.talks.each do |talk|
@@ -48,6 +48,7 @@ arts.each do |script|
   proxy script.permalink, "/art/single.html", locals: { script: script, title: script.friendly }, ignore: true, layout: :full
 end
 
+page '/books/*', layout: :books
 page '/sitemap.xml', layout: false
 
 configure :build do

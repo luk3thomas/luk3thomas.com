@@ -1,0 +1,21 @@
+#books {
+    list-style:none;
+    padding:0;
+
+    a {
+        color:#333;
+    }
+
+    p, h1 {
+        margin:.1em 0;
+    }
+
+    li {
+        padding:2em 0;
+    }
+
+    .date {
+        padding-left:1em;
+        color:#666;
+    }
+}

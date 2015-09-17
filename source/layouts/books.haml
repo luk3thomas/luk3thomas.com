@@ -1,0 +1,13 @@
+!!! html
+%html
+  %head
+    %meta{charset: "utf-8"}
+    %meta(name="description" content="#{data.page.description}" )
+    %meta(name="viewport" content="initial-width:device-width, initial-scale=1.0" )
+    %title= data.page.title
+    = stylesheet_link_tag "books"
+
+  %body
+    #wrapper
+      ~ yield
+    = javascript_include_tag "books/all"

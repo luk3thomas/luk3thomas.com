@@ -4,5 +4,5 @@
  *= require theme/theme
  *= require theme/main
  *= require theme/responsive
- *= require_tree .
+ *= require_tree ./theme
  */

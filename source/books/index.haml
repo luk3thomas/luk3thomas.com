@@ -1,25 +1,16 @@
 ---
-layout: full
-title: Books I've Read
+title: Books
 ---
 
-%h1 Books
-
-:markdown
-
-  A list of books I've read or an currently reading along with my favorite quotes.
+%p
+  These are some books I've found on the internet that I've wanted to read yet
+  I couldn't because the formatting. I've simply copied the books to my site
+  and restyled the content. I believe any book here is in the public domain.
 
 %ul#books
-  - data.books.each do |slug, b|
-    
-    %li.book
-      .info
-        %span.tags
-          %span.tag.category= b.category
-          %span.tag /
-        %span.tags
-          - b.tags.each do |tag|
-            %span.tag.light= tag
-      %h2.title
-        %a{href: "/books/#{slug}.html"}= b.title
-      %h4.author= b.author
+  %li
+    %h1
+      %a(href='grace-abounding/') Grace Abounding to the Chief of Sinners
+    %p
+      %span.author John Bunyan
+      %small.date 1666
