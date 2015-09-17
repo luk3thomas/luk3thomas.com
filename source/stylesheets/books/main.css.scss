@@ -9,6 +9,15 @@ body {
     padding-top:50px;
 }
 
+body.dark {
+    background-color: #151515;
+    color: #999DA0;
+}
+
+body.dark a {
+    color: #688CA5;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-weight:900;
 }
