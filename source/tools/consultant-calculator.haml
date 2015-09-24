@@ -12,7 +12,7 @@ title: Consultant Calculator
       %a#clear(href="#") clear
   %span.flat-rate.input-group
     %span.dollar $
-    %textarea(id="price" type="text")
+    %textarea#price(type="number")
 %p
   %button#button-shipping(for='shipping-percentage') ×
 %p
@@ -20,7 +20,7 @@ title: Consultant Calculator
     %span Shipping
   %span#shipping-percentage.percentage.input-group
     %span.dollar $
-    %input(id="shipping" type="text")
+    %input#shipping(type="number")
     %span.percent %
 %p
   %button#button-tax(for='tax-percentage') ×
@@ -33,7 +33,7 @@ title: Consultant Calculator
         %option Select by state
   %span#tax-percentage.percentage.input-group
     %span.dollar $
-    %input(id="tax" type="text")
+    %input(id="tax" type="number")
     %span.percent %
 
 %h1#result

@@ -178,21 +178,20 @@ render = ->
   price    = STATE.price.value
   tax      = STATE.tax.value
   shipping = STATE.shipping.value
+  result   = 0 + price
 
   setButtonState('shipping')
   setButtonState('tax')
 
-  if STATE.tax.type is 'flatRate'
-    finalTax = tax
-  else
-    finalTax = price * tax
-
   if STATE.shipping.type is 'flatRate'
-    finalShipping = shipping
+    result += shipping
   else
-    finalShipping = price * shipping
+    result *= (shipping + 1)
 
-  result = price + finalTax + finalShipping
+  if STATE.tax.type is 'flatRate'
+    result += tax
+  else
+    result *= (tax + 1)
 
   $result.innerHTML = result.toFixed(2)
   storeState()
