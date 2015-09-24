@@ -1,0 +1,99 @@
+---
+layout: full
+title: Consultant Calculator
+---
+
+%h1 Consultant Calculator
+
+%p
+  %label
+    %span Price
+    %small
+      %a#clear(href="#") clear
+  %span.flat-rate.input-group
+    %span.dollar $
+    %textarea(id="price" type="text")
+%p
+  %button#button-shipping(for='shipping-percentage') ×
+%p
+  %label
+    %span Shipping
+  %span#shipping-percentage.percentage.input-group
+    %span.dollar $
+    %input(id="shipping" type="text")
+    %span.percent %
+%p
+  %button#button-tax(for='tax-percentage') ×
+
+%p
+  %label
+    %span State Sales Tax Rate
+    %small
+      %select#state
+        %option Select by state
+  %span#tax-percentage.percentage.input-group
+    %span.dollar $
+    %input(id="tax" type="text")
+    %span.percent %
+
+%h1#result
+
+
+#instructions
+  :markdown
+    ### Instructions
+
+    1. Enter multiple line items into the price box. It will sum them all.
+    2. Toggle the the `×` or `+` buttons to switch between flat rate and percentage.
+    3. The state tax rates were found [here](http://www.tax-rates.org/taxtables/sales-tax-by-state).
+
+
+= javascript_include_tag 'tools/consultant-calculator'
+:css
+  #instructions {
+    padding-top: 5em;
+  }
+
+  label {
+    display: block;
+    padding: 0 0 0.5em 0;
+  }
+
+  ol {
+    padding-left: 1.3em;
+  }
+
+  input:focus,
+  textarea:focus {
+    box-shadow: none !important;
+  }
+
+  input, textarea {
+    width: 100%;
+  }
+
+  #state,
+  #clear {
+    float: right;
+  }
+
+  #price {
+    min-height: 10rem;
+  }
+
+  .input-group {
+    display: flex;
+  }
+
+  .flatRate .percent,
+  .percentage .dollar {
+    display: none;
+  }
+
+  .dollar,
+  .percent {
+    padding: 0 .3em;
+    line-height: 2.3;
+    background-color: #eee;
+    color: #999;
+  }
