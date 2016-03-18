@@ -10,6 +10,15 @@
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black-translucent", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}
+    %style
+      body {
+      font: 40px helvetica, arial !important;
+      color: white !important;
+      }
+      a {
+      color: #ccc;
+      text-decoration: none;
+      }
     = partial "layouts/partials/ga"
     %style#site_logo_css{:type => "text/css"}
       \.reveal #site-logo {
