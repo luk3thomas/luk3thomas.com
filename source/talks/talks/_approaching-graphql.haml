@@ -22,16 +22,16 @@
       color: #3cdc8b;
     }
 
-%section(class="center")
+%section(class="center"){"data-transition" => "none"}
   %h2 Approaching GraphQL
 
-%section{"data-background" => "rebeccapurple"}
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h2 What is GraphQL?
   %ol
     %li A <span class="green-text">query language</span> for APIs
     %li A <span class="green-text">runtime</span> for fulfilling those queries with your existing data.
 
-%section{"data-background" => "rebeccapurple"}
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h2 What is GraphQL not?
   %ol
     %li An ORM
@@ -155,6 +155,43 @@
             }
           }]
         }
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h6 Writes
+  .code-vsplit
+    %pre
+      %code(class="clojure")
+        :preserve
+          # Query
+          mutation createUser {
+            createUser(email: "baz.com") {
+              id
+              email
+            }
+          }
+
+    %pre
+      %code(class="haskel")
+        :preserve
+          # Schema
+          type Mutation {
+            createUser(email: String): User
+          }
+
+  %pre
+    %code
+      :preserve
+        {
+          "data": {
+            "createUser": {
+              "id": "3",
+              "email": "baz@example.com",
+            }
+          }
+        }
+
+
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h3 GraphQL is a <span class="green-text">query language</span>
   %h5 Expressive type system
@@ -163,7 +200,10 @@
     * Objects
     * Enums
     * Inputs
-    * Interfaces, Unions, much more
+    * Interfaces
+    * Unions
+    * Modifiers
+
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h3 GraphQL is a <span class="green-text">query language</span>
   %h5 Expressive type system
@@ -252,16 +292,10 @@
   %pre
     %code(class="haskel")
       :preserve
-        scalar Email
-
-        enum CompanyType {
-          CNN
-          FOX_NEWS
-        }
+        enum CompanyType { CNN }
 
         type Author {
           name: String
-          email: Email
           posts: [Post]
         }
 
@@ -308,38 +342,274 @@
 
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h3 GraphQL is a <span class="green-text">query language</span>
-  %h6 Writes
+  %h5 Expressive type system
+  %p Modifiers
+
+  :markdown
+    When reading data the GraphQL runtime responds with error messages
+    communicating the state of the fulfilled query. Any non conformity to the
+    schema is reported as an error.
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Modifiers
+
+  %pre
+    %code(class="ruby")
+      :preserve
+        !     # Non null
+        []    # List
+
+
+        # How it works
+        name: String         # nullable name
+        name: String!        # non nullable name
+        names: [String]      # nullable list of nullable names
+        names: [String]!     # non nullable list of nullable names
+        names: [String!]!    # non nullable list of non nullable names
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Modifiers on types
+
   .code-vsplit
     %pre
       %code(class="clojure")
         :preserve
-          # Query
-          mutation createUser {
-            createUser(email: "baz.com") {
-              id
-              email
+          query {
+            user {
+              name
             }
           }
 
     %pre
       %code(class="haskel")
         :preserve
-          # Schema
-          type Mutation {
-            createUser(email: String): User
+          type User {
+            id: ID!
+            name: String!
+          }
+
+          type Query {
+            user: User
           }
 
   %pre
     %code
       :preserve
         {
+          "errors": [
+            { "message": "Cannot return null for non-nullable field User.name.", }
+          ],
           "data": {
-            "createUser": {
-              "id": "3",
-              "email": "baz@example.com",
-            }
+            "user": null
           }
         }
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Modifiers on arguments
+
+  .code-vsplit
+    %pre
+      %code(class="clojure")
+        :preserve
+          query {
+            user {
+              name
+            }
+          }
+
+    %pre
+      %code(class="haskel")
+        :preserve
+          type User {
+            id: ID!
+            name: String!
+          }
+
+          type Query {
+            user(id: ID!): User
+          }
+
+  %pre
+    %code
+      :preserve
+        {
+          "errors": [
+            {
+              "message": "Field \"viewer\" argument \"id\" of type \"ID!\" is required but not provided.",
+            }
+          ]
+        }
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Modifiers on inputs 😍
+
+  .code-vsplit
+    %pre
+      %code(class="clojure")
+        :preserve
+          mutation {
+            createUser(input: { name: "Jazzy Scooter" }) {
+              name
+            }
+          }
+
+    %pre
+      %code(class="haskel")
+        :preserve
+          input CreateUserInput {
+            name: String!
+            email: String!
+          }
+
+          type Mutation {
+            createUser(input: CreateUserInput!): User
+          }
+
+  %pre
+    %code
+      :preserve
+        {
+          "errors": [
+            {
+              "message": "Field CreateUserInput.email of required type String! was not provided.",
+            }
+          ]
+        }
+
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Unions
+
+  :markdown
+    A set of possible types with no guarantee of consistency between fields.
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Unions
+
+  %pre
+    %code(class="haskel")
+      :preserve
+        type SocialMediaPost {
+          content: String
+        }
+
+        type BlogPost {
+          title: String
+          content: String
+        }
+
+        union PostUnion = BlogPost | SocialMediaPost
+
+        type Query {
+          posts: [PostUnion]
+        }
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Unions
+  .code-vsplit
+    %pre
+      %code(class="clojure")
+        :preserve
+          query {
+            posts {
+              ... on SocialMediaPost {
+                content
+              }
+              ... on BlogPost {
+                title
+                content
+              }
+            }
+          }
+
+    %pre
+      %code(class="haskel")
+        :preserve
+          {
+            "data": {
+              "posts": {
+                { "content": "I ate a donut!" },
+                { "title": "🍩 are tasty.", "content": "That is all." },
+              }
+            }
+          }
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Interface
+
+  :markdown
+    An abstract type declaring common fields and arguments. Any object
+    implementing an interface is guarantees certain fields exist.
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Interface
+
+  %pre
+    %code(class="haskel")
+      :preserve
+        interface MutationResult {
+          notice: String
+          success: Boolean!
+        }
+
+        type CreateExpensePayload implements MutationResult {
+          result: Expense
+          success: Boolean!
+        }
+
+        mutation {
+          createExpense(input: CreateExpenseInput!): CreateExpensePayload
+        }
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 GraphQL is a <span class="green-text">query language</span>
+  %h5 Expressive type system
+  %p Interface
+
+  .code-vsplit
+    %pre
+      %code(class="clojure")
+        :preserve
+          mutation createExpense($input: CreateExpenseInput!) {
+            createExpense(input: $input) {
+              success
+              result {
+                amount
+              }
+            }
+          }
+
+    %pre
+      %code(class="haskel")
+        :preserve
+          {
+            "data": {
+              "createExpense": {
+                "success": true,
+                "result": {
+                  "amount": 42.0
+                }
+              }
+            }
+          }
 
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h3 GraphQL is a <span class="green-text">runtime</span>
@@ -474,6 +744,8 @@
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h3 Benefits
   %h5 Explorable APIs
+  :markdown
+    Add descriptions. Deprecate fields. Communicate.
   = image_tag "talks/approaching-graphql/graphiql-search.gif"
 
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
@@ -496,6 +768,24 @@
   :markdown
     Add descriptions. Deprecate fields. Communicate.
   = image_tag "talks/approaching-graphql/enum-descriptions.png"
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 Benefits
+  %h5 Explorable APIs
+  :markdown
+    Add descriptions. Deprecate fields. Communicate.
+
+    Some good examples:
+
+    * [Github API](https://developer.github.com/v4/explorer/)
+    * [StarWars API](http://graphql.org/swapi-graphql/)
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 Benefits
+  %h5 Static Types 🏋️
+  :markdown
+    Push input paramater validations out into the GraphQL runtime and build
+    user interfaces to consume and bubble up responses.
 
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h3 Benefits
@@ -555,7 +845,7 @@
   %h5 Performance Insight
   = image_tag "talks/approaching-graphql/tracing.jpg"
 
-%section(class="center")
+%section(class="center"){"data-transition" => "none"}
   %h3 Questions?
   %h5 The end 👋
 
