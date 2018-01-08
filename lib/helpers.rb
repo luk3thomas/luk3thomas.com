@@ -73,15 +73,3 @@ class DynamicJs
     /\.coffee$/ =~ @filename
   end
 end
-
-class Canvas < DynamicJs
-  def initialize filename
-    super filename, "canvas"
-  end
-end
-
-class Art < DynamicJs
-  def initialize filename
-    super filename, "art"
-  end
-end

@@ -4,18 +4,6 @@
 
 require './lib/helpers.rb'
 
-def collect_files(path)
-  Dir.entries(path)
-    .select {|f| !(/^\./ =~ f) }  # exclude vim swp files and . .. directories
-    .sort {|a, b| (File.stat("#{path}#{a}").mtime <=> File.stat("#{path}#{b}").mtime) * -1}
-end
-
-scripts = collect_files('./source/javascripts/canvas/')
-  .map { |f| Canvas.new(f) }
-
-arts = collect_files('./source/javascripts/art/')
-  .map { |f| Art.new(f) }
-
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
 
@@ -33,19 +21,6 @@ end
 
 data.talks.each do |talk|
   proxy talk.href, "/talks/show.html", locals: { talk: talk }, ignore: true, layout: :talk
-end
-
-# Dynamic canvas labs
-#
-proxy "/canvas/index.html", "/canvas/list.html", ignore: true, locals: {pages: scripts}, layout: :full
-proxy "/art/index.html", "/art/list.html", ignore: true, locals: {pages: arts}, layout: :full
-
-scripts.each do |script|
-  proxy script.permalink, "/canvas/single.html", locals: { script: script }, ignore: true, layout: :canvas
-end
-
-arts.each do |script|
-  proxy script.permalink, "/art/single.html", locals: { script: script, title: script.friendly }, ignore: true, layout: :full
 end
 
 page '/books/*', layout: :books
