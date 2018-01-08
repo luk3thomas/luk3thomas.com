@@ -6,78 +6,25 @@
     %title= defined?(title) ? title : data.page.title
     %meta{:content => "luk3thomas", :name => "author"}
     %meta(name="description" content="#{data.page.description}" )
-    %base{:href => "http://gist-reveal.it/566f9706cb9848edaf1e"}
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black-translucent", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}
-    %style
-      body {
-      font: 40px helvetica, arial !important;
-      color: white !important;
-      }
-      a {
-      color: #ccc;
-      text-decoration: none;
-      }
-    = partial "layouts/partials/ga"
-    %style#site_logo_css{:type => "text/css"}
-      \.reveal #site-logo {
-      position:   fixed;
-      z-index:    30;
-      bottom:     10px;
-      left:       10px;
-      padding:    0.25%;
-      max-width:  130px;
-      outline:    none;
-      box-shadow: none;
-      background: transparent;
-    }
-    %link{:href => "css/reveal.min.css", :rel => "stylesheet"}
-    %link#theme{:href => "css/theme/60e54843de11a545897e/60e54843de11a545897e.css", :rel => "stylesheet"}
-    / For syntax highlighting
-    %link{:href => "lib/css/zenburn.css", :rel => "stylesheet"}
-    / If the query includes 'print-pdf', include the PDF print sheet
-    :javascript
-      if( window.location.search.match( /print-pdf/gi ) ) {
-        var link = document.createElement( 'link' );
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = 'css/print/pdf.css';
-        document.getElementsByTagName( 'head' )[0].appendChild( link );
-      }
+    %link(href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css" rel="stylesheet")
+    %link(href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css" rel="stylesheet")
+    %link(href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/css/zenburn.min.css" rel="stylesheet")
   %body
     .reveal
-      / Any section element inside of this container is displayed as a slide
       .slides
         = yield
-        %img#site-logo{:alt => "Launch on OpenShift", :src => "img/launchbutton.svg"}/
-    %script{:src => "lib/js/head.min.js"}
-    %script{:src => "js/reveal.min.js"}
+    %script{:src => "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"}
+    %script{:src => "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"}
     :javascript
-      // Full list of configuration options available here:
-      // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
-      	controls: true,
-      	progress: true,
-      	history: true,
-      	center: true,
-      	hosted:{ id: '99923d2867a234c4', url: 'gist-reveal.it'},
-      	theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-      	transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
-
-      	// Parallax scrolling
-      	// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
-      	// parallaxBackgroundSize: '2100px 900px',
-
-      	// Optional libraries used to extend on reveal.js
-      	dependencies: [
-      		{ src: 'http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js', async: true },
-      		{ src: 'plugin/hosted/client.js', async: true },
-      		{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-      		{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-      		{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-      		{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-      		{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-      		{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-      	]
+        controls: true,
+        progress: true,
+        history: true,
+        center: false,
+        dependencies: [
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/highlight/highlight.min.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        ]
       });
