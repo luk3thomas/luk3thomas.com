@@ -4,6 +4,9 @@
       display: flex;
       justify-content: space-between;
     }
+    .code-vsplit img {
+      height: 100%;
+    }
 
     .code-vsplit > * {
       width: 46% !important;
@@ -26,16 +29,51 @@
   %h2 Approaching GraphQL
 
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
-  %h2 What is GraphQL?
+  %h3 What is GraphQL?
   %ol
     %li A <span class="green-text">query language</span> for APIs
     %li A <span class="green-text">runtime</span> for fulfilling those queries with your existing data.
 
+  .code-vsplit
+    %pre
+      %code(class="clojure")
+        :preserve
+          query {
+            viewer {
+              email
+            }
+          }
+
+    %pre
+      %code
+        :preserve
+          {
+            "data": {
+              "viewer": {
+                "email": "foo@example.com"
+              }
+            }
+          }
+
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
-  %h2 What is GraphQL not?
+  %h3 What is GraphQL not?
   %ol
     %li An ORM
     %li Data storage layer
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 Why use GraphQL?
+  :markdown
+
+    Build user interface centric API. Clients using GraphQL to construct design
+    elements can efficiently fetch everything required for a component in one
+    request.
+
+%section{"data-transition" => "none", "data-background" => "rebeccapurple"}
+  %h3 Why use GraphQL?
+  .code-vsplit
+    = image_tag "talks/approaching-graphql/example-query.png"
+    = image_tag "talks/approaching-graphql/example-ui.png"
 
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
   %h3 Differences with REST?
@@ -48,9 +86,10 @@
   %pre
     %code(class="clojure")
       :preserve
-        /
         /posts
         /posts/1
+        /posts/1/comments
+        /posts/1/comments/1
         ...
 
 %section{"data-transition" => "none", "data-background" => "rebeccapurple"}
