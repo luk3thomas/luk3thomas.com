@@ -40,36 +40,3 @@ end
 def render_lab filename
   File.read("./source/labs/data/#{filename}/index.html")
 end
-
-class DynamicJs
-  attr_accessor :filename, :base
-
-  def initialize filename, base
-    @filename = filename
-    @base = base
-  end
-
-  def name
-    @filename.gsub(/\.[^\.]+$/, '')
-  end
-
-  def friendly
-    name.gsub(/-/, ' ')
-  end
-
-  def permalink
-    "/#{@base}/#{name}.html"
-  end
-
-  def url
-    "http://localhost:4568/javascripts/#{@base}/#{name}.js"
-  end
-
-  def path
-    "./source/javascripts/#{@base}/#{@filename}"
-  end
-
-  def coffee?
-    /\.coffee$/ =~ @filename
-  end
-end
