@@ -33,7 +33,7 @@ class Posts
   end
 
   def find_by_tag tag
-    @posts.select{|k,d| d.tag === tag}
+    @posts.select{|k,d| d.tag === tag}.to_a.reverse.to_h
   end
 end
 
