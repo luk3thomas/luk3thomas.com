@@ -1,9 +1,0 @@
-layout: labs
-title: React and Immutable.js
-image: true
-category: Code
-tags:
-      - react.js
-      - immstruct
-content: |
-  A stopwatch built with React and immstruct. Source code is in [github](https://github.com/luk3thomas/react-immstruct-demo).

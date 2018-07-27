@@ -1,9 +1,0 @@
-layout: labs
-title: Spinning Arcs
-image: true
-category: HTML5 canvas
-tags:
-      - animation
-      - canvas
-content: |
-  Random arcs spinning randomly. Press the mouse down to make the arcs into complete circles. Keep holding the mouse down and the arcs disappear.
