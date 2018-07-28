@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>{{.Title}}</title>
+    <meta content='luk3thomas' name='author'>
+    <meta name='description'>
+    <meta content='yes' name='apple-mobile-web-app-capable'>
+    <meta content='black-translucent' name='apple-mobile-web-app-status-bar-style'>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/css/zenburn.min.css' rel='stylesheet'>
+  </head>
+  <body>
+    <div class='reveal'>
+      <div class='slides'>
+        {{ .Content }}
+      </div>
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js'></script>
+    <script>
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: false,
+        dependencies: [
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/highlight/highlight.min.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        ]
+      });
+    </script>
+  </body>
+</html>

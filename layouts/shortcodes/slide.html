@@ -1,0 +1,7 @@
+<section
+    {{ with .Get "class" }} class="{{ . }}"{{end}}
+    {{ with .Get "transition" }} data-transition="{{ . }}"{{end}}
+    {{ with .Get "background" }} data-background="{{ . }}"{{end}}
+  >
+  {{ .Inner }}
+</section>

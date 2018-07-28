@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{- partial "head.html" . -}}
+    {{- block "head" . }}{{- end }}
+  </head>
+  <body class="wrapper">
+    <aside class="aside">
+      {{- block "side" . }}{{- end }}
+    </aside>
+    <main class="main {{ .Type }}-type">
+      {{- block "main" . }}{{- end }}
+    </main>
+  </body>
+  {{- block "footer" . }}{{- end }}
+</html>

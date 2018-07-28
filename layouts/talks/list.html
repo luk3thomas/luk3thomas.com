@@ -1,0 +1,26 @@
+{{ define "side" }}
+  {{- partial "menu.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+    <article>
+      <header>
+        <h1>{{ .Title }}</h1>
+      </header>
+      {{ .Content }}
+    </article>
+    {{ range .Pages }}
+      <h2>
+        <a href="{{.Permalink}}">{{.Title}}</a>
+        <small>
+          –
+          <time datetime="{{ .Date.Format "2006-01-02 00:00:00" }}">
+            {{.Date.Format "January 2006"}}
+          </time>
+        </small>
+      </h2>
+      <p>
+        {{.Description}}
+      </p>
+    {{ end }}
+{{ end }}

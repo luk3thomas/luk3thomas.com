@@ -1,7 +1,7 @@
 *.sw[op]
 *~
 .DS_Store
-build
 .aws-keys
 tmp
 .info
+public

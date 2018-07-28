@@ -1,0 +1,19 @@
+{{ define "side" }}
+  {{- partial "menu.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+  <article class="home">
+    {{ .Content }}
+
+    {{ range first 5 .Pages }}
+      <li>
+        <a href="{{.Permalink}}">{{.Title}}</a>
+        <time datetime="{{ .Date.Format "2006-01-02 00:00:00" }}"> {{.Date.Format "January 2, 2006"}} </time>
+      </li>
+    {{ end }}
+    <p>
+      Older content are <a href="/notes">available here</a>.
+    </p>
+  </article>
+{{ end }}
