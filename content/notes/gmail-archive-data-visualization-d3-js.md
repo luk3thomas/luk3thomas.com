@@ -22,7 +22,7 @@ as well.  They are base64 encoded and attached as a multipart email attachment.
 Long story short, I parsed the `gmail.mbox`, extracted a few meta data points
 from each email, and strored the results in a SQL database.
 
-![MySQL Structure View](/images/posts/gmail.sql.jpg)
+![MySQL Structure View](gmail.sql.jpg)
 
 A very useful piece of meta data is the custom `X-Gmail-Labels` header google
 adds to all emails.  The value of the header are the labels applied to an email
@@ -41,13 +41,13 @@ NYT visualization for President Obama's 2013
 [budget](http://www.nytimes.com/interactive/2012/02/13/us/politics/2013-budget-proposal-graphic.html).
 
 [![Gmail
-Visualization](/labs/data/2014-02-24-gmail-archive-for-2013/thumbnail.jpg)](/labs/gmail-archive-for-2013-20140224.html)
+Visualization](/labs/gmail-archive-for-2013/thumbnail.jpg)](/labs/gmail-archive-for-2013/)
 
 Overall the project was alot of fun.  d3.js is an amazing tool with a _steep_
 learning curve.  It seemed forever before I understand d3's force layout.  In
 the end, I'm not proud of the JavaScript code, but by the conclusion of the
 project I needed to plow though and finish things while I still had steam.
 
-See the [visualization](/labs/gmail-archive-for-2013-20140224.html) in action.
+See the [visualization](/labs/gmail-archive-for-2013/) in action.
 
 Discussion on [Hacker News](https://news.ycombinator.com/item?id=7291893).
