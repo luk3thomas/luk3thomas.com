@@ -2,7 +2,3 @@ baseURL = "http://luk3thomas.com/"
 languageCode = "en-us"
 title = "luk3thomas.com"
 disableHugoGeneratorInject = true
-
-[taxonomies]
-category = ""
-tags = ""
