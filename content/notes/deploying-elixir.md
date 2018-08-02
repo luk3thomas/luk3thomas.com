@@ -17,6 +17,8 @@ releases. At the time I didn't know much about Erlang and was ignorant of the
 compliation process. Since then I've found that distillery and docker, along
 with a few other things, are essential for my workflow.
 
+### Contents
+
 1. [Application configuration with environment variables](#configuration)
 2. [Version releases with git tags](#version)
 3. [Use Docker to build](#docker)
@@ -26,10 +28,10 @@ Before we begin building releases we'll need to tackle two common problems.
 Application configuration with environment variables and unique version (without
 manual changes).
 
-## Application configuration {#configuration}
+## Application configuration with environment variables {#configuration}
 
-If you've ever tried creating a release while using environment variables you've
-probably seen this problem.
+If you've ever created a release with environment variables in the config
+you probably already know what I am about to say.
 
 {{% codefig caption="Don't do this." %}}
 ```elixir
@@ -53,19 +55,19 @@ end
 ```
 {{% /codefig %}}
 
-Whatever value stored in `DATABASE_NAME` is hardcoded into the build artifact
-at compilation and cannot be modified when you deploy, even when you set them in
-your runtime.
+Whatever value is in `DATABASE_NAME` is hardcoded into the release artifact
+at compilation. After you deploy you cannot change it. Ever.
 
 Blog posts, articles, and Stackoverflow questions have all been written about
 compile time environment variables. Even Plataformatec wrote an article, [_How
 to config environment variables with Elixir and
 Exrm_](http://blog.plataformatec.com.br/2016/05/how-to-config-environment-variables-with-elixir-and-exrm/).
 
-Most solutions say to use a secret file. Others, in the case of distilery, to to
-define your variables in a particular format `user: "${DB_USER}"` and in
-conjuction with a certain environment variable `REPLACE_OS_VARS=true` it will
-interpolate `${}` with environment variables on startup.
+Most solutions say to use a secret file. Others, in the case of distilery, to
+define your variables in a [string interpolated format](https://hexdocs.pm/distillery/runtime-configuration.html) `user:
+"${DB_USER}"`. On startup you can pass an additional environment variable,
+`REPLACE_OS_VARS=true` and it will magically replace `${DB_USER}` when whatever
+value exists in the `DB_USER` environment variable.
 
 Both of these solutions are fine, but I prefer using environment variables the
 same way in Elixir as I do in other languages.
@@ -75,8 +77,7 @@ Now, I've read that using a `env` file to store environment variables isn't the
 way_](https://github.com/avdi/dotenv_elixir#warning-this-isnt-the-elixir-way)
 and you should use approaches like Phoenix's secrets file for managing per
 environment configurations. That's cool. Not every project I create uses Phoenix
-though. So I still need a way to manage configuration variables
-without compiling for different environments.
+though.
 
 The best way _that has worked for me_ is to use a config wrapper I first saw
 from
@@ -117,12 +118,13 @@ defmodule HttpClient
   end
 end
 ```
+
 {{% /codefig %}}
 
 ## Versioning {#version}
 
-Before we create a deployment release we need a way to version our application.
-By default the `mix.exs` file includes a version string in your project
+Before we create a release we should version our application.
+By default `mix.exs` includes a version string in your project
 definition.
 
 {{% codefig caption="Version 0.1.0" %}}
@@ -139,16 +141,31 @@ defmodule App.MixProject do
   end
 end
 ```
+
 {{% /codefig %}}
 
 The version is used by build tools so it is important to change the version for
-each new release. Typically I version my application serially with each new
-release, e.g. `v1`, `v2`, `v3`, etc.
+each new release. Typically I version my application serially. Each new release
+gets a new, incremental version tag, e.g. `v1`, `v2`, `v3`, etc.
 
-Unless I'm building a release, the version does not matter. If I am building a
-release I need the artifact to have a unique version. I use `git describe`
-([covered later](#creating-a-release)) for fetching a unique ref which I pass in as an environment
-variable when I create a release.
+During development the version does not matter. It does in production though,
+for a couple of reasons. First, distillery builds according to the version and
+each release needs a distinct version. Second, it is always a good idea to
+know what version of the application is running in production. You can pass the
+version information into your metrics, traces or logs.
+
+I use `git describe` for the version suffix in production. More on that
+[later](#creating-a-release).
+
+```elixir
+# config/config.exs
+config :myapp,
+  version: System.get_env("APP_VERSION")
+```
+
+Note, I didn't use `{:system, "APP_VERSION"}`. In this instance I actually want
+to hardcode the version at compile time, unlike my other configuration
+variables.
 
 ```elixir
 # mix.exs
@@ -161,11 +178,38 @@ defmodule App.MixProject do
     ]
   end
 
-  def version, do: System.get_env("VERSION") |> version
+  def version, do: Config.get(:sstell, :version) |> version
   def version(nil), do: "1.0.0+dev"
   def version(v), do: "1.0.0+#{v}"
 end
 ```
+
+If versioning with `git describe` seems too complex or it does not fit your
+needs you can always update the version by hand. As long as the version is
+unique between releases you should be okay.
+
+{{% codefig caption="Update the version by hand, if that is easiest for you." %}}
+
+```diff
+diff --git a/mix.exs b/mix.exs
+index a808289..d3374e4 100644
+--- a/mix.exs
++++ b/mix.exs
+@@ -3,7 +3,7 @@ defmodule App.MixProject do
+
+   def project do
+     [
+-      version: "0.1.0",
++      version: "0.2.0",
+     ]
+   end
+ end
+```
+
+{{% /codefig %}}
+
+With configuration and versioning settled you should be ready to build a
+release.
 
 ## Building a release {#docker}
 
@@ -274,16 +318,16 @@ RUN mix deps.compile
 
 {{% /codefig %}}
 
-Built it and tag as `my-app:latest`. We'll use this image along with `docker
+Built it and tag as `myapp:latest`. We'll use this image along with `docker
 run` to produce releases.
 
 ```
-$ docker build -f Dockerfile.build -t my-app .
+$ docker build -f Dockerfile.build -t myapp .
 ```
 
 ## Creating a release {#creating-a-release}
 
-Now the `my-app:latest` image should contain everything we need to build a
+Now the `myapp:latest` image should contain everything we need to build a
 release. I use [distillery](https://github.com/bitwalker/distillery) for
 creating the actual release. On installation it creates a configuration file,
 and last I checked, it should provide the default options you'll want. Either
@@ -301,7 +345,8 @@ Including ERTS (the Erlang Runtime System) means the host machine does not
 require erlang (or elixir) to be installed to run the application. In our case we're
 building for Ubuntu 16.04. The release will run without any installed
 dependecies as long as the binary was built on a machine with similar CPU
-architecture, which makes things simpler when you provision a host server.
+architecture. Much simpler than having to install two language runtimes on your
+server!
 
 Run `mix release --env prod`. If you mount the `_build/prod/rel` volume to the
 container it will save the resulting output to the host machine.
@@ -315,26 +360,26 @@ $ docker run -it --rm \
         -v $(pwd)/config:/app/config\
         -v $(pwd)/lib:/app/lib \
         -v $(pwd)/rel:/app/rel \
-        my-app:latest mix release --env prod
+        myapp:latest mix release --env prod
 
 Compiling 53 files (.ex)
-Generated my-app app
+Generated myapp app
 ==> Assembling release..
-==> Building release my-app:1.0.0+v1 using environment prod
+==> Building release myapp:1.0.0+v1 using environment prod
 ==> Including ERTS 10.0.1 from /root/.asdf/installs/erlang/21.0.1/erts-10.0.1
 ==> Packaging release..
 ==> Release successfully built!
     You can run it in one of the following ways:
-      Interactive: _build/prod/rel/my-app/bin/my-app console
-      Foreground: _build/prod/rel/my-app/bin/my-app foreground
-      Daemon: _build/prod/rel/my-app/bin/my-app start
+      Interactive: _build/prod/rel/myapp/bin/myapp console
+      Foreground: _build/prod/rel/myapp/bin/myapp foreground
+      Daemon: _build/prod/rel/myapp/bin/myapp start
 ```
 
 Now I have a build artifact ready for deployment.
 
 ```
-$ ls -lh _build/prod/rel/my-app/releases/1.0.0+v1/my-app.tar.gz
--rw-r--r--  1 lthomas1  staff    20M Aug  1 03:51 _build/prod/rel/my-app/releases/1.0.0+v1/my-app.tar.gz
+$ ls -lh _build/prod/rel/myapp/releases/1.0.0+v1/myapp.tar.gz
+-rw-r--r--  1 lthomas1  staff    20M Aug  1 03:51 _build/prod/rel/myapp/releases/1.0.0+v1/myapp.tar.gz
 ```
 
 We're ready to deploy.
@@ -351,16 +396,16 @@ Deploying is straightforward at this point. Just a few more steps.
 {{% codefig caption="Sample deploy script for uploading, ectracting and starting an app" %}}
 
 ```
-$ scp _build/prod/rel/my-app/releases/1.0.0+v1/my-app.tar.gz ubuntu@my-app.com:/tmp/my-app.tar.gz
-$ ssh ubuntu@my-app.com 'mkdir -p /app/my-app/releases/1.0.0+v1 \
-      && cp /tmp/my-app.tar.gz /app/my-app/releases/1.0.0+v1/ \
-      && cd /app/my-app/releases/1.0.0+v1 \
-      && tar xzvf /app/my-app/releases/1.0.0+v1/my-app.tar.gz \
-      && sudo systemctl stop my-app \
-      && cd /app/my-app/releases \
-      && rm /app/my-app/releases/current \
-      && ln -s /app/my-app/releases/1.0.0+v1 current \
-      && sudo systemctl start my-app'
+$ scp _build/prod/rel/myapp/releases/1.0.0+v1/myapp.tar.gz ubuntu@myapp.com:/tmp/myapp.tar.gz
+$ ssh ubuntu@myapp.com 'mkdir -p /app/myapp/releases/1.0.0+v1 \
+      && cp /tmp/myapp.tar.gz /app/myapp/releases/1.0.0+v1/ \
+      && cd /app/myapp/releases/1.0.0+v1 \
+      && tar xzvf /app/myapp/releases/1.0.0+v1/myapp.tar.gz \
+      && sudo systemctl stop myapp \
+      && cd /app/myapp/releases \
+      && rm /app/myapp/releases/current \
+      && ln -s /app/myapp/releases/1.0.0+v1 current \
+      && sudo systemctl start myapp'
 ```
 
 {{% /codefig %}}
@@ -373,19 +418,19 @@ file path to my environment variables.
 {{% codefig caption="Sample systemd service definition for stopping, starting, and sourcing environment variables" %}}
 
 ```shell
-$ cat /lib/systemd/system/my-app.service
+$ cat /lib/systemd/system/myapp.service
 [Unit]
-Description=my-app
+Description=myapp
 After=network.target
 
 [Service]
 Type=simple
 User=ubuntu
 RemainAfterExit=yes
-EnvironmentFile=/app/my-app/env
-WorkingDirectory=/app/my-app
-ExecStart=/app/my-app/releases/current/bin/my-app foreground
-ExecStop=/app/my-app/releases/current/bin/my-app stop
+EnvironmentFile=/app/myapp/env
+WorkingDirectory=/app/myapp
+ExecStart=/app/myapp/releases/current/bin/myapp foreground
+ExecStop=/app/myapp/releases/current/bin/myapp stop
 Restart=on-failure
 TimeoutSec=300
 
