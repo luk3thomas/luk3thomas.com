@@ -21,12 +21,12 @@ with a few other things, are essential for my workflow.
 
 1. [Application configuration with environment variables](#configuration)
 2. [Version releases with git tags](#version)
-3. [Use Docker to build](#docker)
+3. [Use Docker to build](#building)
 4. [Creating releases with distillery](#creating-a-release)
 
 Before we begin building releases we'll need to tackle two common problems.
-Application configuration with environment variables and unique version (without
-manual changes).
+Application configuration with environment variables and unique versioning
+(without manual changes).
 
 ## Application configuration with environment variables {#configuration}
 
@@ -56,7 +56,7 @@ end
 {{% /codefig %}}
 
 Whatever value is in `DATABASE_NAME` is hardcoded into the release artifact
-at compilation. After you deploy you cannot change it. Ever.
+at compile time. Once it is compiled you cannot change it. Ever.
 
 Blog posts, articles, and Stackoverflow questions have all been written about
 compile time environment variables. Even Plataformatec wrote an article, [_How
@@ -73,7 +73,7 @@ Both of these solutions are fine, but I prefer using environment variables the
 same way in Elixir as I do in other languages.
 
 Now, I've read that using a `env` file to store environment variables isn't the
-[_elixir
+[_Elixir
 way_](https://github.com/avdi/dotenv_elixir#warning-this-isnt-the-elixir-way)
 and you should use approaches like Phoenix's secrets file for managing per
 environment configurations. That's cool. Not every project I create uses Phoenix
@@ -145,14 +145,14 @@ end
 {{% /codefig %}}
 
 The version is used by build tools so it is important to change the version for
-each new release. Typically I version my application serially. Each new release
-gets a new, incremental version tag, e.g. `v1`, `v2`, `v3`, etc.
+each new release. Each release gets a new, incremental version tag, e.g.
+`v1`, `v2`, `v3`, etc.
 
 During development the version does not matter. It does in production though,
-for a couple of reasons. First, distillery builds according to the version and
-each release needs a distinct version. Second, it is always a good idea to
-know what version of the application is running in production. You can pass the
-version information into your metrics, traces or logs.
+for a couple of reasons. First, distillery assumes each release has a unique
+version. Second, it is always a good idea to know what version of the
+application is running in production. You can pass the version information into
+your metrics, traces or logs.
 
 I use `git describe` for the version suffix in production. More on that
 [later](#creating-a-release).
@@ -163,9 +163,10 @@ config :myapp,
   version: System.get_env("APP_VERSION")
 ```
 
-Note, I didn't use `{:system, "APP_VERSION"}`. In this instance I actually want
-to hardcode the version at compile time, unlike my other configuration
-variables.
+Note, Although we just talked about [environment configuration](#configuration),
+I didn't use `{:system, "APP_VERSION"}` to define the version :joy:. In this instance,
+I actually want to hardcode the version at compile time, unlike my other
+configuration variables.
 
 ```elixir
 # mix.exs
@@ -178,7 +179,7 @@ defmodule App.MixProject do
     ]
   end
 
-  def version, do: Config.get(:sstell, :version) |> version
+  def version, do: Config.get(:myapp, :version) |> version
   def version(nil), do: "1.0.0+dev"
   def version(v), do: "1.0.0+#{v}"
 end
@@ -208,27 +209,22 @@ index a808289..d3374e4 100644
 
 {{% /codefig %}}
 
-With configuration and versioning settled you should be ready to build a
-release.
+With configuration and versioning settled you're ready to build a release.
 
-## Building a release {#docker}
+## Building a release {#building}
 
-Docker is handy for creating a stand-alone deployment artifact for your target
-OS. I divide my Dockerfiles into two main parts. I create `Dockerfile.runtime`
-for creating a base image of the target operating system, elixir, and erlang.
-Then I create a second image, `Dockerfile.build`, as another base image for
-application dependencies.
+I divide my Dockerfiles into two main parts: _runtime_ and _build_.
+`Dockerfile.runtime` contains the base image operating system, Elixir, and
+Erlang. `Dockerfile.build`, inherits the base image and includes the application
+dependencies.
 
-Separating the Docker files speeds up the building process from a few minutes to
+Separating the Docker files speeds up the build process from a few minutes to
 around 30 seconds.
 
 ### Create base image for your target OS
 
-Let's assume you want to run on Ubuntu 16.04. Start with the `ubuntu:16.04` base
-image and install Elixir and Erlang. I've used
-[asdf](https://github.com/asdf-vm/asdf) as my programming language version
-manager in the past. It actually works well in this case too, for for installing
-Elixir and Erlang.
+Let's assume you want to run on Ubuntu 16.04. Start with the `ubuntu:16.04` and
+install Elixir and Erlang.
 
 {{% codefig caption="Dockerfile for installing Erlang 21.0.1 and Elixir 1.6.6 on Ubuntu 16.04" %}}
 
@@ -264,7 +260,6 @@ RUN rm -rf /var/cache/debconf/*-old && \
     rm -rf /usr/share/doc/*
 
 
-# Install the language runtime
 RUN set -xe \
     && git clone https://github.com/asdf-vm/asdf.git ~/.asdf \
     && asdf plugin-add erlang https://github.com/asdf-vm/asdf-erlang.git \
@@ -278,8 +273,7 @@ RUN set -xe \
 
 {{% /codefig %}}
 
-Built it and tag as `ubuntu:erl-20.0.1_elixir-1.6.6`. We'll reuse it in the next
-image.
+Built and tag it as `ubuntu:erl-20.0.1_elixir-1.6.6`.
 
 ```
 $ docker build -f docker/Dockerfile.runtime -t ubuntu:erl-20.0.1_elixir-1.6.6 .
@@ -287,10 +281,11 @@ $ docker build -f docker/Dockerfile.runtime -t ubuntu:erl-20.0.1_elixir-1.6.6 .
 
 ### Create base image for the application
 
-The second Dockerfile is based on the first. It fetches and compiles the
-application dependencies. The dependencies shouldn't change as often as the
-application code. An image with the compiled dependencies means only your app
-should be compiled during the build.
+The second Dockerfile is based on the first. This image fetches and compiles the
+application dependencies, which shouldn't change as often as the application
+code. That means we'll only compile the application code when we create a
+release, which should only takes a few seconds as opposed to a few minutes if
+we're compiling all the dependencies too.
 
 {{% codefig caption="Dockerfile for compiling the application dependencies" %}}
 
@@ -318,8 +313,7 @@ RUN mix deps.compile
 
 {{% /codefig %}}
 
-Built it and tag as `myapp:latest`. We'll use this image along with `docker
-run` to produce releases.
+Built and tag it.
 
 ```
 $ docker build -f Dockerfile.build -t myapp .
@@ -327,11 +321,9 @@ $ docker build -f Dockerfile.build -t myapp .
 
 ## Creating a release {#creating-a-release}
 
-Now the `myapp:latest` image should contain everything we need to build a
-release. I use [distillery](https://github.com/bitwalker/distillery) for
-creating the actual release. On installation it creates a configuration file,
-and last I checked, it should provide the default options you'll want. Either
-way, be sure `include_erts:` is set to `true`.
+Now we're ready to create a release. I use
+[distillery](https://github.com/bitwalker/distillery) for this part. Upon
+installation it creates a configuration file.
 
 ```elixir
 environment :prod do
@@ -341,15 +333,17 @@ environment :prod do
 end
 ```
 
-Including ERTS (the Erlang Runtime System) means the host machine does not
-require erlang (or elixir) to be installed to run the application. In our case we're
-building for Ubuntu 16.04. The release will run without any installed
-dependecies as long as the binary was built on a machine with similar CPU
-architecture. Much simpler than having to install two language runtimes on your
-server!
+It should provide the default options you'll want, but be sure `include_erts:`
+is set to `true`.
 
-Run `mix release --env prod`. If you mount the `_build/prod/rel` volume to the
-container it will save the resulting output to the host machine.
+The ERTS (the Erlang Runtime System) is a portable system responsible for
+running your application. The host machine does not need Erlang or elixir
+installed if you include the ERTS. As I mentioned before, this is why it is
+important to compile your code on the same operating system that you use in
+production.
+
+Run `mix release --env prod`. Mount `_build/prod/rel` as a volume to the
+container and it will save the realese on your machine.
 
 ```shell
 $ docker run -it --rm \
@@ -375,50 +369,51 @@ Generated myapp app
       Daemon: _build/prod/rel/myapp/bin/myapp start
 ```
 
-Now I have a build artifact ready for deployment.
+Now we have a release ready for deployment :tada:.
 
 ```
 $ ls -lh _build/prod/rel/myapp/releases/1.0.0+v1/myapp.tar.gz
 -rw-r--r--  1 lthomas1  staff    20M Aug  1 03:51 _build/prod/rel/myapp/releases/1.0.0+v1/myapp.tar.gz
 ```
 
-We're ready to deploy.
+Let's deploy :rocket:
 
 ## Deploying
 
-Deploying is straightforward at this point. Just a few more steps.
+Deploying is straightforward at this point. We just need to hit a few more
+steps.
 
 1. Copy the build artifact to your server
 2. Extract the new release
 3. Stop the previously running release
 4. Start the new release
 
-{{% codefig caption="Sample deploy script for uploading, ectracting and starting an app" %}}
+### release directory
 
+I like to keep my releases in a single directory and symlink to the current
+version.
+
+```shell
+$ pwd
+/app/myapp/releases
+$ ls -l
+drwxrwxr-x 7 ubuntu ubuntu 4096 Jul 24 13:17 1.0.0+v10
+drwxrwxr-x 7 ubuntu ubuntu 4096 Jul 25 01:09 1.0.0+v11
+drwxrwxr-x 7 ubuntu ubuntu 4096 Jul 25 03:32 1.0.0+v11-2-g26120de
+drwxrwxr-x 7 ubuntu ubuntu 4096 Jul 25 03:47 1.0.0+v11-4-geeef94f
+drwxrwxr-x 7 ubuntu ubuntu 4096 Jul 25 04:25 1.0.0+v12
+lrwxrwxrwx 1 ubuntu ubuntu   30 Aug  1 08:54 current -> /app/myapp/releases/1.0.0+v12
 ```
-$ scp _build/prod/rel/myapp/releases/1.0.0+v1/myapp.tar.gz ubuntu@myapp.com:/tmp/myapp.tar.gz
-$ ssh ubuntu@myapp.com 'mkdir -p /app/myapp/releases/1.0.0+v1 \
-      && cp /tmp/myapp.tar.gz /app/myapp/releases/1.0.0+v1/ \
-      && cd /app/myapp/releases/1.0.0+v1 \
-      && tar xzvf /app/myapp/releases/1.0.0+v1/myapp.tar.gz \
-      && sudo systemctl stop myapp \
-      && cd /app/myapp/releases \
-      && rm /app/myapp/releases/current \
-      && ln -s /app/myapp/releases/1.0.0+v1 current \
-      && sudo systemctl start myapp'
-```
 
-{{% /codefig %}}
+### systemd
 
-I should briefly mention systemd. You can use whatever you want to initialize
-your application. I'm using systemd to manage everything. My service definition
-file defines the commands used for starting and stopping the app as well as the
-file path to my environment variables.
+You can use whatever you want to initialize
+your application. I'm using systemd.
 
 {{% codefig caption="Sample systemd service definition for stopping, starting, and sourcing environment variables" %}}
 
-```shell
-$ cat /lib/systemd/system/myapp.service
+```
+# /lib/systemd/system/myapp.service
 [Unit]
 Description=myapp
 After=network.target
@@ -440,6 +435,49 @@ WantedBy=multi-user.target
 
 {{% /codefig %}}
 
+Once defined, you can stop and start.
+
+```shell
+$ sudo systemctl stop myapp
+$ sudo systemctl start myapp
+```
+
+Or view the logs.
+
+```shell
+$ sudo journalctl -u sstell
+-- Logs begin at Thu 2018-08-01 04:52:17 UTC, end at Fri 2018-08-03 02:38:07 UTC. --
+Aug 03 02:35:28 sstell systemd[1]: Stopping sstell...
+Aug 03 02:35:30 sstell sstell[9581]: ok
+Aug 03 02:35:33 sstell systemd[1]: Stopped sstell.
+Aug 03 02:36:08 sstell systemd[1]: Started sstell.
+Aug 03 02:36:11 sstell sstell[9873]: http://localhost:4001
+```
+
+A simple deploy script could look something like this.
+
+{{% codefig caption="Sample deploy script for uploading, ectracting and starting an app" %}}
+
+```
+$ scp _build/prod/rel/myapp/releases/1.0.0+v1/myapp.tar.gz ubuntu@myapp.com:/tmp/myapp.tar.gz
+$ ssh ubuntu@myapp.com 'mkdir -p /app/myapp/releases/1.0.0+v1 \
+    && cp /tmp/myapp.tar.gz /app/myapp/releases/1.0.0+v1/ \
+    && cd /app/myapp/releases/1.0.0+v1 \
+    && tar xzvf /app/myapp/releases/1.0.0+v1/myapp.tar.gz \
+    && sudo systemctl stop myapp \
+    && cd /app/myapp/releases \
+    && rm /app/myapp/releases/current \
+    && ln -s /app/myapp/releases/1.0.0+v1 current \
+    && sudo systemctl start myapp'
+```
+
+{{% /codefig %}}
+
 ## Conclusion
 
-That's it!
+That's it! Deploying Elixir apps certainly has a few _gotchas_ and what I've
+outlined won't work for everyone. Regardless of your solution it is important to
+develop good tooling around configuration, versioning, and building to match
+your production environment.
+
+Happy deploying!
