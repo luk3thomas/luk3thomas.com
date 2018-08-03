@@ -1,4 +1,6 @@
 hugo
 aws --profile=luk3 s3 sync public/ s3://luk3thomas.com/ --acl=public-read --cache-control="max-age=1576800000" --exclude "*.html"
-aws --profile=luk3 s3 sync public/ s3://luk3thomas.com/ --acl=public-read --cache-control="max-age=0, no-cache" --exclude "*" --include "*.html"
-
+aws --profile=luk3 s3 sync public/ s3://luk3thomas.com/ --acl=public-read --cache-control="max-age=0, no-cache" \
+  --exclude "*" \
+  --include "*.html" \
+  --include "*.css"
