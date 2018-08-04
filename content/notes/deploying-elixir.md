@@ -4,7 +4,7 @@ date: 2018-07-30T22:09:42-05:00
 ---
 
 First off, there is probably a better way than what I am about to show you.
-These are simply a few things I've learned along the way building and running a
+These are simply a few things I've learned along the way building and running
 Elixir applications in production. *They have worked for me*. My projects are
 usually pretty simple, so I can't speak to advanced topics like cluster
 deployments.
@@ -445,13 +445,13 @@ $ sudo systemctl start myapp
 Or view the logs.
 
 ```shell
-$ sudo journalctl -u sstell
+$ sudo journalctl -u myapp
 -- Logs begin at Thu 2018-08-01 04:52:17 UTC, end at Fri 2018-08-03 02:38:07 UTC. --
-Aug 03 02:35:28 sstell systemd[1]: Stopping sstell...
-Aug 03 02:35:30 sstell sstell[9581]: ok
-Aug 03 02:35:33 sstell systemd[1]: Stopped sstell.
-Aug 03 02:36:08 sstell systemd[1]: Started sstell.
-Aug 03 02:36:11 sstell sstell[9873]: http://localhost:4001
+Aug 03 02:35:28 myapp systemd[1]: Stopping myapp...
+Aug 03 02:35:30 myapp myapp[9581]: ok
+Aug 03 02:35:33 myapp systemd[1]: Stopped myapp.
+Aug 03 02:36:08 myapp systemd[1]: Started myapp.
+Aug 03 02:36:11 myapp myapp[9873]: http://localhost:4001
 ```
 
 A simple deploy script could look something like this.
