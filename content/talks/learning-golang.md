@@ -1,5 +1,5 @@
 ---
-title: Learning GoLang
+title: Learning Golang
 date: 2019-01-12T00:00:00-06:00
 description: |
   Go is an open source programming language that makes it easy to build simple, reliable, and efficient software. In this talk I'll cover a few of the basic concepts that helped me understand the language.
