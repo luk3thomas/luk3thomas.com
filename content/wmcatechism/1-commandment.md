@@ -318,4 +318,9 @@ required by the law. Even down to the smallest, most minute detail. He never
 stumbled. And why did he do this? For the **JOY** set before him. That we may
 know God!
 
+### Where did you get this?
+
+The following questions and answers were copied from the Westminister
+Confession. You can find it here https://www.apuritansmind.com/westminster-standards/larger-catechism/
+
 # First commandment
