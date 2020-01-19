@@ -321,6 +321,6 @@ know God!
 ### Where did you get this?
 
 The following questions and answers were copied from the Westminister
-Confession. You can find it here https://www.apuritansmind.com/westminster-standards/larger-catechism/
+Confession. You can find it [here](https://www.apuritansmind.com/westminster-standards/larger-catechism/)
 
 # First commandment
