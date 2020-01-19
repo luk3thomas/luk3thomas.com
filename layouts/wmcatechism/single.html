@@ -1,15 +1,3 @@
 {{ define "main" }}
   {{ .Content }}
-  {{ range $q := .Params.questions }}
-    <p> {{ $q.num }} {{ $q.q }} </p>
-    <blockquote>
-      {{ range $i, $p := $q.parts }}
-      {{ $p.t }} [
-        {{ range $ref := $p.r }}
-        <a href="https://biblia.com/bible/esv/{{ $ref }}"><small>{{ $ref }}</small></a>
-        {{ end }}
-      ]
-      {{ end }}
-    </blockquote>
-  {{ end  }}
 {{ end }}

@@ -1,0 +1,12 @@
+{{ with index $.Site.Data.wmcatechism .Params.q }}
+  <h2> {{ .num }} {{ .q }} </h2>
+  <blockquote>
+    {{ range $i, $p := .parts }}
+    {{ $p.t }} [
+      {{ range $ref := $p.r }}
+      <a href="https://biblia.com/bible/esv/{{ $ref }}"><small>{{ $ref }}</small></a>
+      {{ end }}
+    ]
+    {{ end }}
+  </blockquote>
+{{ end }}
