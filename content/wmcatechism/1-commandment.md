@@ -84,8 +84,6 @@ What does it mean to make _men the lords of our faith and conscience_?
 
 Have you ever ascribed praise of any good we either are, have, or can do, to fortune, idols, ourselves, or any other creature?
 * Let's make our speech full of praise to him
-* Let's point back the glory to him
-
-How many times per day do we break the first commandment!?
+* Let's point the glory back to him
 
 {{< wmquestion q="106" >}}
