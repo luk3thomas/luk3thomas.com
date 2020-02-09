@@ -12,7 +12,13 @@ body {
   box-sizing: border-box;
 }
 
-h1, h2, h3, h4, h5, h6, .menu a {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.menu a {
   font-family: helvetica, arial, sans-serif;
   letter-spacing: -1px;
   font-weight: 500;
@@ -23,7 +29,7 @@ h1 {
   letter-spacing: -4px;
   font-size: 60px;
   line-height: 1;
-  margin-bottom: .25em;
+  margin-bottom: 0.25em;
 }
 
 .wrapper {
@@ -111,5 +117,11 @@ figure figcaption {
     top: 0;
     padding-left: 1em;
     width: 200px;
+  }
+}
+
+@media print {
+  .main {
+    max-width: 100%;
   }
 }
